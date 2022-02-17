@@ -1,9 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Romain Petit on 09/02/2022.
-//
 
 import Foundation
 public struct Response: Codable{

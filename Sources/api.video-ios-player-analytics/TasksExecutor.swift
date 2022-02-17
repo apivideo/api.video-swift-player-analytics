@@ -1,9 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Romain Petit on 09/02/2022.
-//
 
 import Foundation
 public class TasksExecutor{
@@ -14,14 +8,12 @@ public class TasksExecutor{
         task = session.dataTask(with: request, completionHandler: {data, response, error -> Void in
             let httpResponse = response as? HTTPURLResponse
             let statuscode = httpResponse?.statusCode
-            print("statuscode : \(statuscode)")
             switch statuscode!{
             case 200 ... 299:
                 task?.cancel()
                 completion(data, resp)
             case 400, 401, 404:
                 let json = try? JSONSerialization.jsonObject(with: data!) as? Dictionary<String, AnyObject>
-                print("error json : \(json)")
                 if(json != nil){
                     let data: Data? = nil
                     let stringStatus = String(json!["status"] as? Int ?? httpResponse!.statusCode)

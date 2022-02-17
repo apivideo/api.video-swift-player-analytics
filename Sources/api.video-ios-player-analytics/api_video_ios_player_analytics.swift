@@ -171,18 +171,6 @@ public class api_video_ios_player_analytics {
         }
     }
 }
-
-public enum VideoType: String{
-    case VOD = "vod"
-    case LIVE = "live"
-    static let all = [VOD,LIVE]
-    
-}
-
-enum VideoError: Error {
-    case Error(String)
-}
-
 extension String{
     public func toVideoType() throws -> VideoType{
         switch self.lowercased() {
@@ -194,128 +182,6 @@ extension String{
             throw VideoError.Error("Can't determine if video is vod or live.")
         }
     }
-}
-
-public struct VideoInfo{
-    public let pingUrl: String
-    public let videoId: String
-    public let videoType: VideoType
-}
-
-
-public struct PlaybackPingMessage : Codable{
-    let emittedAt: String
-    let session: Session
-    let events: [PingEvent]
-    
-    private enum CodingKeys : String, CodingKey {
-        case emittedAt = "emitted_at", session, events
-    }
-}
-
-
-public struct PingEvent: Codable{
-    let emittedAt: String
-    let type: Event
-    let at: Float?
-    let from: Float?
-    let to: Float?
-    
-    private enum CodingKeys : String, CodingKey {
-        case emittedAt = "emitted_at", type, at, from, to
-    }
-}
-
-public enum Event: String, Codable{
-    case PLAY = "play"
-    case RESUME = "resume"
-    case READY = "ready"
-    case PAUSE = "pause"
-    case END = "end"
-    case SEEK_FORWARD = "seek.forward"
-    case SEEK_BACKWARD = "seek.backward"
-}
-
-public class StringRequest{
-    var method: Int
-    var url: String
-    var body: String?
-    
-    init(method: Int, url: String){
-        self.method = method
-        self.url = url
-    }
-    
-    init(method: Int, url: String, body: String?){
-        self.method = method
-        self.url = url
-        self.body = body
-    }
-}
-
-public struct Session: Codable{
-    let sessionId: String?
-    let loadedAt: String
-    let videoId: String?
-    let livestreamId: String?
-    let referrer: String
-    let metadata: [[String:String]]
-    
-    public static func buildLiveStreamSession(sessionId: String?, loadedAt: String, livestreamId: String, referrer: String, metadata : [[String : String]]) -> Session{
-        return Session(sessionId: sessionId, loadedAt: loadedAt, videoId: nil, livestreamId: livestreamId, referrer: referrer, metadata: metadata)
-    }
-    public static func buildVideoSession(sessionId: String?, loadedAt: String, videoId: String, referrer: String, metadata : [[String : String]]) -> Session{
-        return Session(sessionId: sessionId, loadedAt: loadedAt, videoId: videoId, livestreamId: nil, referrer: referrer, metadata: metadata)
-    }
-    
-    private enum CodingKeys : String, CodingKey {
-        case sessionId = "session_id", loadedAt = "loaded_at", videoId = "video_id", livestreamId, referrer, metadata
-    }
-    
-}
-
-public struct Options{
-    public var videoInfo: VideoInfo
-    public var metadata = [[String: String]]()
-    public let onSessionIdReceived: ((String) -> ())?
-    public let onPing: ((PlaybackPingMessage) -> ())?
-    
-    public init(mediaUrl: String, metadata: [[String: String]], onSessionIdReceived: ((String) -> ())? = nil, onPing: ((PlaybackPingMessage) -> ())? = nil) throws {
-        do{
-            videoInfo = try Options.parseMediaUrl(mediaUrl: mediaUrl)
-        }catch{
-            throw VideoError.Error("error with media url")
-        }
-        self.metadata = metadata
-        self.onSessionIdReceived = onSessionIdReceived
-        self.onPing = onPing
-    }
-    
-    private static func parseMediaUrl(mediaUrl: String) throws -> VideoInfo{
-        let regex = "https:/.*[/](vod|live)([/]|[/.][^/]*[/])([^/^.]*)[/.].*"
-        
-        let matcher = mediaUrl.match(regex)
-        if(matcher.isEmpty){
-            throw VideoError.Error("The media url doesn't look like an api.video URL")
-        }
-        if (matcher[0].count < 3) {
-            print("The media url doesn't look like an api.video URL.")
-        }
-        
-        do {
-            let videoType = try matcher[0][1].description.toVideoType()
-            let videoId = matcher[0][3]
-            
-            return VideoInfo(pingUrl: "https://collector.api.video/\(videoType.rawValue)", videoId: videoId, videoType: videoType)
-        } catch let error {
-            print(error.localizedDescription)
-            throw VideoError.Error("The media url doesn't look like an api.video URL : \(error)")
-        }
-        
-    }
-}
-
-extension String {
     public func match(_ regex: String) -> [[String]] {
         let nsString = self as NSString
         return (try? NSRegularExpression(pattern: regex, options: []))?.matches(in: self, options: [], range: NSMakeRange(0, nsString.length)).map { match in
@@ -340,5 +206,4 @@ extension Date {
     var preciseLocalTime: String {
         return Formatter.preciseLocalTime.string(from: self)
     }
-    
 }
