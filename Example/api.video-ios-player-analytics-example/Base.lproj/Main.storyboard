@@ -28,18 +28,32 @@
                                     <action selector="playVideo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Qv0-bg-5PL"/>
                                 </connections>
                             </button>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lXc-xx-Ylz">
+                                <rect key="frame" x="20" y="423" width="374" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="14B-rR-ETI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="lXc-xx-Ylz" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="0xK-0r-o8v"/>
+                            <constraint firstItem="lXc-xx-Ylz" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="OkY-8s-P9k"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Mou-3k-YLv" secondAttribute="bottom" constant="30" id="VEC-Lc-waK"/>
                             <constraint firstItem="Mou-3k-YLv" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="W3F-wf-2eK"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="lXc-xx-Ylz" secondAttribute="trailing" constant="20" id="e4I-MD-8U0"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="videoUrlTextField" destination="lXc-xx-Ylz" id="DRw-q3-g1L"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="139" y="94"/>
+            <point key="canvasLocation" x="137.68115942028987" y="93.75"/>
         </scene>
     </scenes>
     <resources>
