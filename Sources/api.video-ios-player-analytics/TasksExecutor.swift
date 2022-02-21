@@ -1,6 +1,6 @@
 
 import Foundation
-public class TasksExecutor{
+public class TasksExecutor: TasksExecutorProtocol{
     private let decoder = JSONDecoder()
     public func execute(session: URLSession, request: URLRequest, group: DispatchGroup?, completion: @escaping (Data?, Response?) -> ()){
         var resp: Response? = nil
