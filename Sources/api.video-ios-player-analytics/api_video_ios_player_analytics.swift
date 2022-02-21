@@ -7,7 +7,6 @@ public class api_video_ios_player_analytics {
     private var options: Options
     private static let playbackDelay = 10 * 1000
     private var timer: Timer?
-    private var counter = 0 // a supprimer ceci est un test
     private var eventsStack = [PingEvent]()
     private let loadedAt = Date().preciseLocalTime
     
@@ -84,14 +83,12 @@ public class api_video_ios_player_analytics {
     public func destroy(completion: @escaping () -> ()){
         unSchedule()
         completion()
-        //        completion(pause())
     }
     
     
     private func addEventAt(_ eventName: Event, completion: @escaping() -> ()){
         eventsStack.append(PingEvent(emittedAt: loadedAt, type: eventName, at: currentTime, from: nil, to: nil))
         completion()
-        //do the completion
     }
     
     private func schedule(){
@@ -141,9 +138,9 @@ public class api_video_ios_player_analytics {
         var request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: options.videoInfo.pingUrl)
         var body:[String : Any] = [:]
         let encoder = JSONEncoder()
+        let task: TasksExecutorProtocol = TasksExecutor()
         encoder.outputFormatting = .prettyPrinted
         let jsonpayload = try! encoder.encode(payload)
-        print("json payload : \(String(data: jsonpayload, encoding: .utf8)!)")
         
         if let data = String(data: jsonpayload, encoding: .utf8)?.data(using: .utf8) {
             do {
@@ -153,11 +150,8 @@ public class api_video_ios_player_analytics {
                 print(error.localizedDescription)
             }
         }
-        
-        
-        
         let session = RequestsBuilder().urlSessionBuilder()
-        TasksExecutor().execute(session: session, request: request){ (data, response) in
+        task.execute(session: session, request: request){ (data, response) in
             if(data != nil){
                 let json = try? JSONSerialization.jsonObject(with: data!) as? Dictionary<String, AnyObject>
                 print(json as Any)

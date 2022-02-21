@@ -32,6 +32,7 @@ class ViewController: UIViewController {
             print("error with the url")
         }
         print(option!.videoInfo.videoType.rawValue)
+        
         api = api_video_ios_player_analytics(options: option!)
     }
     
@@ -78,29 +79,11 @@ class ViewController: UIViewController {
     
     
     @IBAction func playVideo(_ sender: Any) {
-        
-        // Create an AVPlayer, passing it the HTTP Live Streaming URL.
         player = AVPlayer(playerItem: nil)
-        
         player?.replaceCurrentItem(with: AVPlayerItem(url: URL(string: videoUrlTextField.text!)!))
-        
-        // Create a new AVPlayerViewController and pass it a reference to the player.
-        
         self.controller.player = player
-        
         setupAVPlayer()
+        present(controller, animated: true) {}
         
-        
-        present(controller, animated: true) {
-                    
-        }
-        
-    }
-    
-}
-
-extension AVPlayer {
-    var isPlaying: Bool {
-        return rate != 0 && error == nil
     }
 }
