@@ -17,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C706D34127C56395004A0506 /* ApiVideoPlayerAnalytics.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = ApiVideoPlayerAnalytics.podspec; sourceTree = "<group>"; };
 		C70E916027AAE59800573494 /* api.video-ios-player-analytics */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "api.video-ios-player-analytics"; path = ..; sourceTree = "<group>"; };
 		C735A2C727AADF9F00145B8E /* api.video-ios-player-analytics-example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "api.video-ios-player-analytics-example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C735A2CA27AADF9F00145B8E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -44,6 +45,7 @@
 			isa = PBXGroup;
 			children = (
 				C70E916027AAE59800573494 /* api.video-ios-player-analytics */,
+				C706D34127C56395004A0506 /* ApiVideoPlayerAnalytics.podspec */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
