@@ -2,7 +2,6 @@
 //  SceneDelegate.swift
 //  api.video-ios-player-analytics-example
 //
-//  Created by Romain Petit on 02/02/2022.
 //
 
 import UIKit

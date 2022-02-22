@@ -2,7 +2,7 @@ import Foundation
 import MobileCoreServices
 
 @available(iOS 11.0, *)
-public class api_video_ios_player_analytics {
+public class PlayerAnalytics {
     
     private var options: Options
     private static let playbackDelay = 10 * 1000
@@ -25,50 +25,47 @@ public class api_video_ios_player_analytics {
     }
     
     
-    public func play(completion: @escaping () -> ()){
+    public func play(completion: @escaping (Bool, VideoError?) -> Void){
         schedule()
-        addEventAt(Event.PLAY){
-            completion()
+        addEventAt(Event.PLAY){(isDone, error) in
+            completion(isDone, error)
         }
     }
     
-    public func resume(completion: @escaping () -> ()){
+    public func resume(completion: @escaping (Bool, VideoError?) -> Void){
         schedule()
-        addEventAt(Event.RESUME){
-            completion()
+        addEventAt(Event.RESUME){(isDone, error) in
+            completion(isDone, error)
         }
     }
     
-    public func ready(completion: @escaping () -> ()){
-        addEventAt(Event.READY){
-            self.sendPing(payload: self.buildPingPayload()){
-                completion()
+    public func ready(completion: @escaping (Bool, VideoError?) -> Void){
+        addEventAt(Event.READY){ (isDone, error) in
+            self.sendPing(payload: self.buildPingPayload()){ (isDone, error) in
+                completion(isDone, error)
             }
         }
     }
     
-    public func end(completion: @escaping () -> ()){
+    public func end(completion: @escaping (Bool, VideoError?) -> Void){
         unSchedule()
-        addEventAt(Event.END){
-            self.sendPing(payload: self.buildPingPayload()){
-                completion()
+        addEventAt(Event.END){ (isDone, error) in
+            self.sendPing(payload: self.buildPingPayload()){ (isDone, error) in
+                completion(isDone, error)
             }
         }
     }
     
-    
-    public func pause(completion: @escaping () -> ()){
+    public func pause(completion: @escaping (Bool, VideoError?) -> Void){
         unSchedule()
-        addEventAt(Event.PAUSE){
-            print("event pause")
-            self.sendPing(payload: self.buildPingPayload()){
-                completion()
+        addEventAt(Event.PAUSE){ (isDone, error) in
+            self.sendPing(payload: self.buildPingPayload()){ (isDone, error) in
+                completion(isDone, error)
             }
         }
-        
     }
     
-    public func seek(from:Float, to: Float, completion : @escaping () -> ()){
+    public func seek(from:Float, to: Float, completion : @escaping (Bool, VideoError?) -> Void){
         if((from > 0) && (to > 0)){
             var event: Event
             if(from < to){
@@ -80,15 +77,14 @@ public class api_video_ios_player_analytics {
         }
     }
     
-    public func destroy(completion: @escaping () -> ()){
+    public func destroy(completion: @escaping (Bool, VideoError?) -> Void){
         unSchedule()
-        completion()
+        completion(true, nil)
     }
     
-    
-    private func addEventAt(_ eventName: Event, completion: @escaping() -> ()){
+    private func addEventAt(_ eventName: Event, completion: @escaping (Bool, VideoError?) -> Void){
         eventsStack.append(PingEvent(emittedAt: loadedAt, type: eventName, at: currentTime, from: nil, to: nil))
-        completion()
+        completion(true,nil)
     }
     
     private func schedule(){
@@ -98,7 +94,7 @@ public class api_video_ios_player_analytics {
     }
     
     private func timerAction() {
-        sendPing(payload: buildPingPayload()){
+        sendPing(payload: buildPingPayload()){ (isDone, error) in
             print("schedule sended")
         }
     }
@@ -106,7 +102,6 @@ public class api_video_ios_player_analytics {
     private func unSchedule(){
         timer?.invalidate()
     }
-    
     
     private func buildPingPayload()-> PlaybackPingMessage{
         var session: Session
@@ -131,10 +126,7 @@ public class api_video_ios_player_analytics {
         return nil
     }
     
-    
-    
-    
-    private func sendPing(payload: PlaybackPingMessage, completion: @escaping () ->()){
+    private func sendPing(payload: PlaybackPingMessage, completion: @escaping (Bool, VideoError?) -> Void){
         var request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: options.videoInfo.pingUrl)
         var body:[String : Any] = [:]
         let encoder = JSONEncoder()
@@ -160,7 +152,9 @@ public class api_video_ios_player_analytics {
                         self.sessionId = mySession
                     }
                 }
-                completion()
+                completion(true,nil)
+            }else{
+                completion(false, VideoError.Error("\(String(describing: response!.statusCode)): \(String(describing: response!.message))"))
             }
         }
     }

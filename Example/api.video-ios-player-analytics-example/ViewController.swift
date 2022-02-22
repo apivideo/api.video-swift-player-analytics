@@ -2,7 +2,6 @@
 //  ViewController.swift
 //  api.video-ios-player-analytics-example
 //
-//  Created by Romain Petit on 02/02/2022.
 //
 
 import UIKit
@@ -12,7 +11,7 @@ import api_video_ios_player_analytics
 
 class ViewController: UIViewController {
     @IBOutlet weak var videoUrlTextField: UITextField!
-    var api: api_video_ios_player_analytics?
+    var api: PlayerAnalytics?
     var option: Options?
     var player: AVPlayer? = nil
     let controller = AVPlayerViewController()
@@ -22,7 +21,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //api_video_ios_player_analytics().schedule()
         videoUrlTextField.text = videoUrl
         do{
             option = try Options(mediaUrl: videoUrl, metadata: [["string 1": "String 2"], ["string 3": "String 4"]], onSessionIdReceived: { (id) in
@@ -33,7 +31,7 @@ class ViewController: UIViewController {
         }
         print(option!.videoInfo.videoType.rawValue)
         
-        api = api_video_ios_player_analytics(options: option!)
+        api = PlayerAnalytics(options: option!)
     }
     
     private func setupAVPlayer() {
@@ -52,24 +50,24 @@ class ViewController: UIViewController {
         if object as AnyObject? === player {
             if keyPath == "status" {
                 if player!.status == .readyToPlay {
-                    self.api?.ready {
+                    self.api?.ready { (isDone, error) in
                         print("ready done")
                     }
                 }
             } else if keyPath == "rate" {
                 if player!.rate > 0 {
                     if(isFirstPlay){
-                        self.api!.play {
+                        self.api!.play { (isDone, error) in
                             print("api play")
                         }
                     }else{
-                        self.api!.resume {
+                        self.api!.resume { (isDone, error) in
                             print("api resume")
                         }
                     }
                     
                 } else {
-                    self.api!.pause {
+                    self.api!.pause { (isDone, error) in
                         print("api pause")
                     }
                 }
@@ -83,6 +81,12 @@ class ViewController: UIViewController {
         player?.replaceCurrentItem(with: AVPlayerItem(url: URL(string: videoUrlTextField.text!)!))
         self.controller.player = player
         setupAVPlayer()
+        //let seekTime = PlayerPlaybackT
+//        let seekTime = PlayerPlaybackTimeFormatter.getConvertedCMTimeByProgress(player: player, progress: progressWhenSliderIsReleased)
+//        player!.seek(to: seekTime, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
+//            guard let `self` = self else { return }
+//            print("Player time after seeking: \(CMTimeGetSeconds(self.player.currentTime()))")
+//        }
         present(controller, animated: true) {}
         
     }
