@@ -20,13 +20,13 @@ A description of this package.
 - [Documentation](#documentation)
     - [Options](#options)
     - [PlayerAnalytics API](#playeranalytics-api)
-        - [`play()`](#play-futurevoid)
-        - [`resume()`](#resume-futurevoid)
-        - [`ready()`](#ready-futurevoid)
-        - [`end()`](#end-futurevoid)
-        - [`seek(from: Float, to: Float)`](#seekfrom-float-to-float-futurevoid)
-        - [`pause()`](#pause-futurevoid)
-        - [`destroy()`](#destroy-futurevoid)
+        - [`play()`](#play)
+        - [`resume()`](#resume)
+        - [`ready()`](#ready)
+        - [`end()`](#end)
+        - [`seek(from: Float, to: Float)`](#seekfrom-float-to-float)
+        - [`pause()`](#pause)
+        - [`destroy()`](#destroy)
         - [`currentTime`](#currenttime)
     - [API documentation](#api-documentation)
 
@@ -68,25 +68,39 @@ Once the module is instantiated, the following methods have to be called to moni
 
 ## PlayerAnalytics API
 
-#### `play(){}`
+#### `play(){(isDone, error) in
+
+}`
 > method to call when the video starts playing for the first time (in the case of a resume after paused, use `resume()`)
 
-#### `resume(){}`
+#### `resume(){(isDone, error) in
+
+}`
 > method to call when the video playback is resumed after a pause
 
-#### `ready(){}`
+#### `ready(){(isDone, error) in
+
+}`
 > method to call once the player is ready to play the media
 
-#### `end(){}`
+#### `end(){(isDone, error) in
+
+}`
 > method to call when the video is ended
 
-#### `seek(from: Float, to: Float){}`
+#### `seek(from: Float, to: Float){(isDone, error) in
+
+}`
 > method to call when a seek event occurs, the `from` and `to` parameters are mandatory and should contains the seek start & end times in seconds
 
-#### `pause(){}`
+#### `pause(){(isDone, error) in
+
+}`
 > method to call when the video is paused
 
-#### `destroy(){}`
+#### `destroy(){(isDone, error) in
+
+}`
 > method to call when the video player is disposed (eg. when the use closes the navigation tab)
 
 #### `currentTime`
