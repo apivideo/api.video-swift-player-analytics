@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C70E916327AAE5B700573494 /* api.video-ios-player-analytics in Frameworks */ = {isa = PBXBuildFile; productRef = C70E916227AAE5B700573494 /* api.video-ios-player-analytics */; };
+		C706D34027C52F9F004A0506 /* ApiVideoPlayerAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = C706D33F27C52F9F004A0506 /* ApiVideoPlayerAnalytics */; };
 		C735A2CB27AADF9F00145B8E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C735A2CA27AADF9F00145B8E /* AppDelegate.swift */; };
 		C735A2CD27AADF9F00145B8E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C735A2CC27AADF9F00145B8E /* SceneDelegate.swift */; };
 		C735A2CF27AADF9F00145B8E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C735A2CE27AADF9F00145B8E /* ViewController.swift */; };
@@ -33,7 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C70E916327AAE5B700573494 /* api.video-ios-player-analytics in Frameworks */,
+				C706D34027C52F9F004A0506 /* ApiVideoPlayerAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				C70E915F27AAE59800573494 /* Packages */,
-				C735A2C927AADF9F00145B8E /* api.video-ios-player-analytics-example */,
+				C735A2C927AADF9F00145B8E /* Example */,
 				C735A2C827AADF9F00145B8E /* Products */,
 				C70E916127AAE5B700573494 /* Frameworks */,
 			);
@@ -73,7 +73,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C735A2C927AADF9F00145B8E /* api.video-ios-player-analytics-example */ = {
+		C735A2C927AADF9F00145B8E /* Example */ = {
 			isa = PBXGroup;
 			children = (
 				C735A2CA27AADF9F00145B8E /* AppDelegate.swift */,
@@ -84,7 +84,7 @@
 				C735A2D527AADFA500145B8E /* LaunchScreen.storyboard */,
 				C735A2D827AADFA500145B8E /* Info.plist */,
 			);
-			path = "api.video-ios-player-analytics-example";
+			path = Example;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -104,7 +104,7 @@
 			);
 			name = "api.video-ios-player-analytics-example";
 			packageProductDependencies = (
-				C70E916227AAE5B700573494 /* api.video-ios-player-analytics */,
+				C706D33F27C52F9F004A0506 /* ApiVideoPlayerAnalytics */,
 			);
 			productName = "api.video-ios-player-analytics-example";
 			productReference = C735A2C727AADF9F00145B8E /* api.video-ios-player-analytics-example.app */;
@@ -314,7 +314,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VY3VXRC7P4;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "api.video-ios-player-analytics-example/Info.plist";
+				INFOPLIST_FILE = Example/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -325,7 +325,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "ecosystem.api-video-ios-player-analytics-example";
+				PRODUCT_BUNDLE_IDENTIFIER = video.api.player.analytics.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -342,7 +342,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VY3VXRC7P4;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "api.video-ios-player-analytics-example/Info.plist";
+				INFOPLIST_FILE = Example/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -353,7 +353,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "ecosystem.api-video-ios-player-analytics-example";
+				PRODUCT_BUNDLE_IDENTIFIER = video.api.player.analytics.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -385,9 +385,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C70E916227AAE5B700573494 /* api.video-ios-player-analytics */ = {
+		C706D33F27C52F9F004A0506 /* ApiVideoPlayerAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = "api.video-ios-player-analytics";
+			productName = ApiVideoPlayerAnalytics;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

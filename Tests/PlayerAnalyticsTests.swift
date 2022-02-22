@@ -2,7 +2,7 @@ import XCTest
 @testable import api_video_ios_player_analytics
 
 @available(iOS 10.0, *)
-final class api_video_ios_player_analyticsTests: XCTestCase {
+final class PlayerAnalyticsTests: XCTestCase {
     func testSuccessTask() throws {
         let task = MockedTasksExecutor()
         guard let url = Bundle(for: MockedTasksExecutor.self).url(forResource: "uploadSuccess", withExtension: "json"),

@@ -1,13 +1,8 @@
-//
-//  ViewController.swift
-//  api.video-ios-player-analytics-example
-//
-//
 
 import UIKit
 import AVFoundation
 import AVKit
-import api_video_ios_player_analytics
+import ApiVideoPlayerAnalytics
 
 class ViewController: UIViewController {
     @IBOutlet weak var videoUrlTextField: UITextField!
