@@ -17,7 +17,7 @@ class ViewController: UIViewController {
     let controller = AVPlayerViewController()
     private var isFirstPlay = true
     
-    private var videoUrl = "https://cdn.api.video/vod/vi7VQtn7FQgpxfF3s6cCgO8H/hls/manifest.m3u8"
+    private var videoUrl = "https://cdn.api.video/vod/vi21aJxFa0A1AFM6FPVmjnhA/hls/manifest.m3u8"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,25 +50,44 @@ class ViewController: UIViewController {
         if object as AnyObject? === player {
             if keyPath == "status" {
                 if player!.status == .readyToPlay {
-                    self.api?.ready { (isDone, error) in
+                    self.api?.ready { (error) in
                         print("ready done")
                     }
                 }
             } else if keyPath == "rate" {
                 if player!.rate > 0 {
                     if(isFirstPlay){
-                        self.api!.play { (isDone, error) in
-                            print("api play")
+                        self.api!.play { (result) in
+                            switch result {
+                              case .success(let data):
+                                print("play")
+                                print(data)
+                              case .failure(let error):
+                                print(error)
+                              }
                         }
+                        
                     }else{
-                        self.api!.resume { (isDone, error) in
-                            print("api resume")
+                        self.api!.resume { (result) in
+                            switch result {
+                              case .success(let data):
+                                print("resume")
+                                print(data)
+                              case .failure(let error):
+                                print(error)
+                              }
                         }
                     }
                     
                 } else {
-                    self.api!.pause { (isDone, error) in
-                        print("api pause")
+                    self.api!.pause { (result) in
+                        switch result {
+                          case .success(let data):
+                            print("pause")
+                            print(data)
+                          case .failure(let error):
+                            print(error)
+                          }
                     }
                 }
             }
