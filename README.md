@@ -1,8 +1,4 @@
 # api.video-ios-player-analytics
-
-A description of this package.
-
-
 [![badge](https://img.shields.io/twitter/follow/api_video?style=social)](https://twitter.com/intent/follow?screen_name=api_video) &nbsp; [![badge](https://img.shields.io/github/stars/apivideo/api.video-ios-player-analytics?style=social)](https://github.com/apivideo/api.video-ios-player-analytics) &nbsp; [![badge](https://img.shields.io/discourse/topics?server=https%3A%2F%2Fcommunity.api.video)](https://community.api.video)
 ![](https://github.com/apivideo/API_OAS_file/blob/master/apivideo_banner.png)
 <h1 align="center">api.video iOS player analytics module</h1>
