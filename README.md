@@ -64,39 +64,25 @@ Once the module is instantiated, the following methods have to be called to moni
 
 ## PlayerAnalytics API
 
-#### `play(){(isDone, error) in
-
-}`
+#### `play(completion: @escaping (Result<Void, Error>) -> Void)`
 > method to call when the video starts playing for the first time (in the case of a resume after paused, use `resume()`)
 
-#### `resume(){(isDone, error) in
-
-}`
+#### `resume(completion: @escaping (Result<Void, Error>) -> Void)`
 > method to call when the video playback is resumed after a pause
 
-#### `ready(){(isDone, error) in
-
-}`
+#### `ready(completion: @escaping (Result<Void, Error>) -> Void)`
 > method to call once the player is ready to play the media
 
-#### `end(){(isDone, error) in
-
-}`
+#### `end(completion: @escaping (Result<Void, Error>) -> Void)`
 > method to call when the video is ended
 
-#### `seek(from: Float, to: Float){(isDone, error) in
-
-}`
+#### `seek(from:Float, to: Float, completion : @escaping (Result<Void, Error>) -> Void)`
 > method to call when a seek event occurs, the `from` and `to` parameters are mandatory and should contains the seek start & end times in seconds
 
-#### `pause(){(isDone, error) in
-
-}`
+#### `pause(completion: @escaping (Result<Void, Error>) -> Void)`
 > method to call when the video is paused
 
-#### `destroy(){(isDone, error) in
-
-}`
+#### `destroy(completion: @escaping (Result<Void, VideoError>) -> Void)`
 > method to call when the video player is disposed (eg. when the use closes the navigation tab)
 
 #### `currentTime`
