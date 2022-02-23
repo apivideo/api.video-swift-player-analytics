@@ -12,7 +12,6 @@ public class PlayerAnalytics {
     
     private(set) public var sessionId: String? = nil{
         didSet{
-            print("didset : \(self.sessionId ?? "error")")
             self.options.onSessionIdReceived?(sessionId!)
         }
     }
@@ -41,16 +40,27 @@ public class PlayerAnalytics {
     
     public func ready(completion: @escaping (Result<Void, Error>) -> Void){
         addEventAt(Event.READY){ (result) in
-            self.sendPing(payload: self.buildPingPayload()){ (error) in
+            switch result{
+            case .success(_):
+                self.sendPing(payload: self.buildPingPayload()){ (res) in
+                    completion(res)
+                }
+            case .failure(_):
                 completion(result)
             }
+            
         }
     }
     
     public func end(completion: @escaping (Result<Void, Error>) -> Void){
         unSchedule()
         addEventAt(Event.END){ (result) in
-            self.sendPing(payload: self.buildPingPayload()){ (error) in
+            switch result{
+            case .success(_):
+                self.sendPing(payload: self.buildPingPayload()){ (res) in
+                    completion(res)
+                }
+            case .failure(_):
                 completion(result)
             }
         }
@@ -59,7 +69,12 @@ public class PlayerAnalytics {
     public func pause(completion: @escaping (Result<Void, Error>) -> Void){
         unSchedule()
         addEventAt(Event.PAUSE){ (result) in
-            self.sendPing(payload: self.buildPingPayload()){ (error) in
+            switch result{
+            case .success(_):
+                self.sendPing(payload: self.buildPingPayload()){ (res) in
+                    completion(res)
+                }
+            case .failure(_):
                 completion(result)
             }
         }
@@ -122,18 +137,7 @@ public class PlayerAnalytics {
         
         return PlaybackPingMessage(emittedAt: Date().preciseLocalTime, session: session, events: eventsStack)
     }
-    
-    private func convertToDictionary(text: String) -> [String: Any]? {
-        if let data = text.data(using: .utf8) {
-            do {
-                return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-        return nil
-    }
-    
+
     private func sendPing(payload: PlaybackPingMessage, completion: @escaping (Result<Void, Error>) -> Void){
         var request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: options.videoInfo.pingUrl)
         var body:[String : Any] = [:]
@@ -154,7 +158,6 @@ public class PlayerAnalytics {
         task.execute(session: session, request: request){ (data, error) in
             if(data != nil){
                 let json = try? JSONSerialization.jsonObject(with: data!) as? Dictionary<String, AnyObject>
-                print(json as Any)
                 if let mySession = json!["session"] as? String {
                     if(self.sessionId == nil){
                         self.sessionId = mySession
