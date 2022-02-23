@@ -24,7 +24,7 @@ public struct Options{
             throw VideoError.Error("The media url doesn't look like an api.video URL")
         }
         if (matcher[0].count < 3) {
-            print("The media url doesn't look like an api.video URL.")
+            throw VideoError.Error("The media url doesn't look like an api.video URL")
         }
         
         do {
@@ -33,7 +33,6 @@ public struct Options{
             
             return VideoInfo(pingUrl: "https://collector.api.video/\(videoType.rawValue)", videoId: videoId, videoType: videoType)
         } catch let error {
-            print(error.localizedDescription)
             throw VideoError.Error("The media url doesn't look like an api.video URL : \(error)")
         }
         
