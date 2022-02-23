@@ -93,7 +93,7 @@ public class PlayerAnalytics {
         }
     }
     
-    public func destroy(completion: @escaping (Result<Void, VideoError>) -> Void){
+    public func destroy(completion: @escaping (Result<Void, Errors>) -> Void){
         unSchedule()
         completion(.success(()))
     }
@@ -178,7 +178,7 @@ extension String{
         case "live":
             return VideoType.LIVE
         default:
-            throw VideoError.Error("Can't determine if video is vod or live.")
+            throw Errors.Error("Can't determine if video is vod or live.")
         }
     }
     public func match(_ regex: String) -> [[String]] {

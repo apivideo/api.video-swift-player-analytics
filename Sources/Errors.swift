@@ -1,5 +1,5 @@
 
 import Foundation
-public enum VideoError: Error {
+public enum Errors: Error {
     case Error(String)
 }
