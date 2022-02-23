@@ -9,7 +9,7 @@ public struct Options{
         do{
             videoInfo = try Options.parseMediaUrl(mediaUrl: mediaUrl)
         }catch{
-            throw VideoError.Error("error with media url")
+            throw Errors.Error("error with media url")
         }
         self.metadata = metadata
         self.onSessionIdReceived = onSessionIdReceived
@@ -21,10 +21,10 @@ public struct Options{
         
         let matcher = mediaUrl.match(regex)
         if(matcher.isEmpty){
-            throw VideoError.Error("The media url doesn't look like an api.video URL")
+            throw Errors.Error("The media url doesn't look like an api.video URL")
         }
         if (matcher[0].count < 3) {
-            throw VideoError.Error("The media url doesn't look like an api.video URL")
+            throw Errors.Error("The media url doesn't look like an api.video URL")
         }
         
         do {
@@ -33,7 +33,7 @@ public struct Options{
             
             return VideoInfo(pingUrl: "https://collector.api.video/\(videoType.rawValue)", videoId: videoId, videoType: videoType)
         } catch let error {
-            throw VideoError.Error("The media url doesn't look like an api.video URL : \(error)")
+            throw Errors.Error("The media url doesn't look like an api.video URL : \(error)")
         }
         
     }
