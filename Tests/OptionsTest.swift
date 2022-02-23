@@ -3,7 +3,7 @@
 //
 
 import XCTest
-@testable import api_video_ios_player_analytics
+@testable import ApiVideoPlayerAnalytics
 
 class OptionsTest: XCTestCase {
 
