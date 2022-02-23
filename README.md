@@ -10,21 +10,22 @@
 - [Table of contents](#table-of-contents)
 - [Project description](#project-description)
 - [Getting started](#getting-started)
-    - [Installation](#installation)
-        - [Swift Package Manager](#swift-package-manager)
+  - [Installation](#installation)
+    - [Swift Package Manager](#swift-package-manager)
+    - [Cocoapods](#cocoapods)
 - [Sample application](#sample-application)
 - [Documentation](#documentation)
-    - [Options](#options)
-    - [PlayerAnalytics API](#playeranalytics-api)
-        - [`play()`](#play)
-        - [`resume()`](#resume)
-        - [`ready()`](#ready)
-        - [`end()`](#end)
-        - [`seek(from: Float, to: Float)`](#seekfrom-float-to-float)
-        - [`pause()`](#pause)
-        - [`destroy()`](#destroy)
-        - [`currentTime`](#currenttime)
-    - [API documentation](#api-documentation)
+  - [Options](#options)
+  - [PlayerAnalytics API](#playeranalytics-api)
+      - [`play(completion: @escaping (Result<Void, Error>) -> Void)`](#playcompletion-escaping-resultvoid-error---void)
+      - [`resume(completion: @escaping (Result<Void, Error>) -> Void)`](#resumecompletion-escaping-resultvoid-error---void)
+      - [`ready(completion: @escaping (Result<Void, Error>) -> Void)`](#readycompletion-escaping-resultvoid-error---void)
+      - [`end(completion: @escaping (Result<Void, Error>) -> Void)`](#endcompletion-escaping-resultvoid-error---void)
+      - [`seek(from:Float, to: Float, completion : @escaping (Result<Void, Error>) -> Void)`](#seekfromfloat-to-float-completion--escaping-resultvoid-error---void)
+      - [`pause(completion: @escaping (Result<Void, Error>) -> Void)`](#pausecompletion-escaping-resultvoid-error---void)
+      - [`destroy(completion: @escaping (Result<Void, VideoError>) -> Void)`](#destroycompletion-escaping-resultvoid-videoerror---void)
+      - [`currentTime`](#currenttime)
+    
 
 
 # Project description
@@ -36,13 +37,18 @@ This is useful if you are using a video player for which we do not yet provide a
 
 ## Installation
 ### Swift Package Manager
-```swift
+In the Project Navigator select your own project. Then select the project in the Project section and click on the Package Dependencies tab. Click on the "+" button at the bottom. Paste the below url on the search bar on the top right. Finaly click on "Add package" button.
+```
  https://github.com/apivideo/api.video-ios-player-analytics.swift
 ```
+### Cocoapods
+Add `pod 'ApiVideoPlayerAnalytics', '1.0.0'` in your `Podfile`
+
+Run `pod install`
 
 # Sample application
 
-A demo application demonstrates how to use player analytics library. See [`/example`](https://github.com/apivideo/api.video-ios-player-analytics/tree/main/Example) folder.
+A demo application demonstrates how to use player analytics library. See [`/Example`](https://github.com/apivideo/api.video-ios-player-analytics/tree/main/Example) folder.
 
 # Documentation
 
