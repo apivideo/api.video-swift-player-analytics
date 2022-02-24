@@ -154,7 +154,7 @@ public class PlayerAnalytics {
                 print(error.localizedDescription)
             }
         }
-        let session = RequestsBuilder().urlSessionBuilder()
+        let session = RequestsBuilder().buildUrlSession()
         task.execute(session: session, request: request){ (data, error) in
             if(data != nil){
                 let json = try? JSONSerialization.jsonObject(with: data!) as? Dictionary<String, AnyObject>

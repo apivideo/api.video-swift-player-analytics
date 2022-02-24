@@ -11,7 +11,7 @@ final class PlayerAnalyticsTests: XCTestCase {
               }
         
         let request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: "url")
-        let session = RequestsBuilder().urlSessionBuilder()
+        let session = RequestsBuilder().buildUrlSession()
 
         task.execute(session: session, request: request){ (data, response) in
             XCTAssertEqual(returnData, data)
@@ -24,7 +24,7 @@ final class PlayerAnalyticsTests: XCTestCase {
         let task = MockedTasksExecutor()
         
         let request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: "url")
-        let session = RequestsBuilder().urlSessionBuilder()
+        let session = RequestsBuilder().buildUrlSession()
 
         task.executefailed(session: session, request: request){ (data, response) in
             XCTAssertNotNil(response)
