@@ -50,7 +50,6 @@ class ViewController: UIViewController {
                     }
                 }
             } else if keyPath == "rate" {
-                player?.addPeriodicTimeObserver(forInterval: <#T##CMTime#>, queue: <#T##DispatchQueue?#>, using: <#T##(CMTime) -> Void#>)
                 if player!.rate > 0 {
                     if(isFirstPlay){
                         self.api!.play { (result) in
