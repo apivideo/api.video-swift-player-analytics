@@ -6,11 +6,7 @@ public struct Options{
     public let onPing: ((PlaybackPingMessage) -> ())?
     
     public init(mediaUrl: String, metadata: [[String: String]], onSessionIdReceived: ((String) -> ())? = nil, onPing: ((PlaybackPingMessage) -> ())? = nil) throws {
-        do{
-            videoInfo = try Options.parseMediaUrl(mediaUrl: mediaUrl)
-        }catch{
-            throw Errors.Error("error with media url")
-        }
+        videoInfo = try Options.parseMediaUrl(mediaUrl: mediaUrl)
         self.metadata = metadata
         self.onSessionIdReceived = onSessionIdReceived
         self.onPing = onPing
