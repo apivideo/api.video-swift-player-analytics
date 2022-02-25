@@ -151,7 +151,7 @@ public class PlayerAnalytics {
                 body = try (JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])!
                 request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
             } catch {
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
         let session = RequestsBuilder().buildUrlSession()
