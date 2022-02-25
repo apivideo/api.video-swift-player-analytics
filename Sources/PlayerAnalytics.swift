@@ -1,6 +1,4 @@
 import Foundation
-import MobileCoreServices
-
 @available(iOS 11.0, *)
 public class PlayerAnalytics {
     
@@ -112,12 +110,12 @@ public class PlayerAnalytics {
     private func timerAction() {
         sendPing(payload: buildPingPayload()){ (result) in
             switch result {
-              case .success(let data):
+            case .success(let data):
                 print("schedule sended")
                 print(data)
-              case .failure(let error):
+            case .failure(let error):
                 print(error)
-              }
+            }
             
         }
     }
@@ -137,7 +135,7 @@ public class PlayerAnalytics {
         
         return PlaybackPingMessage(emittedAt: Date().preciseLocalTime, session: session, events: eventsStack)
     }
-
+    
     private func sendPing(payload: PlaybackPingMessage, completion: @escaping (Result<Void, Error>) -> Void){
         var request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: options.videoInfo.pingUrl)
         var body:[String : Any] = [:]
