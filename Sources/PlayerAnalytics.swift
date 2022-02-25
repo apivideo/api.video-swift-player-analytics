@@ -142,7 +142,6 @@ public class PlayerAnalytics {
         var request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: options.videoInfo.pingUrl)
         var body:[String : Any] = [:]
         let encoder = JSONEncoder()
-        let task: TasksExecutorProtocol = TasksExecutor()
         encoder.outputFormatting = .prettyPrinted
         let jsonpayload = try! encoder.encode(payload)
         
@@ -155,7 +154,7 @@ public class PlayerAnalytics {
             }
         }
         let session = RequestsBuilder().buildUrlSession()
-        task.execute(session: session, request: request){ (data, error) in
+        TasksExecutor.execute(session: session, request: request){ (data, error) in
             if(data != nil){
                 let json = try? JSONSerialization.jsonObject(with: data!) as? Dictionary<String, AnyObject>
                 if let mySession = json!["session"] as? String {
