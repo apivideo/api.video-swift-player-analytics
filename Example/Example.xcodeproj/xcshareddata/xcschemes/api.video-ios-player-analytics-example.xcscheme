@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C735A2C627AADF9F00145B8E"
                BuildableName = "api.video-ios-player-analytics-example.app"
-               BlueprintName = "api.video-ios-player-analytics-example"
+               BlueprintName = "Example"
                ReferencedContainer = "container:api.video-ios-player-analytics-example.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,7 +46,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C735A2C627AADF9F00145B8E"
             BuildableName = "api.video-ios-player-analytics-example.app"
-            BlueprintName = "api.video-ios-player-analytics-example"
+            BlueprintName = "Example"
             ReferencedContainer = "container:api.video-ios-player-analytics-example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -63,7 +63,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C735A2C627AADF9F00145B8E"
             BuildableName = "api.video-ios-player-analytics-example.app"
-            BlueprintName = "api.video-ios-player-analytics-example"
+            BlueprintName = "Example"
             ReferencedContainer = "container:api.video-ios-player-analytics-example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
