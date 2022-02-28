@@ -17,20 +17,15 @@ public struct Options{
         
         let matcher = mediaUrl.match(regex)
         if(matcher.isEmpty){
-            throw Errors.Error("The media url doesn't look like an api.video URL")
+            throw UrlError.malformedUrl("Can not parse media url")
         }
         if (matcher[0].count < 3) {
-            throw Errors.Error("The media url doesn't look like an api.video URL")
+            throw UrlError.malformedUrl("Missing arguments in url")
         }
+   
+        let videoType = try matcher[0][1].description.toVideoType()
+        let videoId = matcher[0][3]
         
-        do {
-            let videoType = try matcher[0][1].description.toVideoType()
-            let videoId = matcher[0][3]
-            
-            return VideoInfo(pingUrl: "https://collector.api.video/\(videoType.rawValue)", videoId: videoId, videoType: videoType)
-        } catch let error {
-            throw Errors.Error("The media url doesn't look like an api.video URL : \(error)")
-        }
-        
+        return VideoInfo(pingUrl: "https://collector.api.video/\(videoType.rawValue)", videoId: videoId, videoType: videoType)
     }
 }
