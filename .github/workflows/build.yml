@@ -1,19 +1,17 @@
-name: iOS starter workflow
+name: Build
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push]
 
 jobs:
   build:
-    name: Build and Test default scheme using any available iPhone simulator
+    name: Build
     runs-on: macos-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Build Package
+        run: swift build -v
       - name: Set Default Scheme
         run: |
           scheme_list=$(xcodebuild -list -json | tr -d "\n")

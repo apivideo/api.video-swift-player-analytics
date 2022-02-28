@@ -5,6 +5,10 @@ import PackageDescription
 
 let package = Package(
     name: "ApiVideoPlayerAnalytics",
+    platforms: [
+            .macOS(.v10_12), .iOS(.v11)
+        ],
+
     products: [
         .library(
             name: "ApiVideoPlayerAnalytics",
