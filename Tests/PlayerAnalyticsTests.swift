@@ -4,7 +4,6 @@ import XCTest
 @available(iOS 10.0, *)
 final class PlayerAnalyticsTests: XCTestCase {
     func testSuccessTask() throws {
-        let task = MockedTasksExecutor()
         guard let url = Bundle(for: MockedTasksExecutor.self).url(forResource: "uploadSuccess", withExtension: "json"),
               let returnData = try? Data(contentsOf: url)else{
                   return
@@ -12,21 +11,18 @@ final class PlayerAnalyticsTests: XCTestCase {
         
         let request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: "url")
         let session = RequestsBuilder().buildUrlSession()
-
-        task.execute(session: session, request: request){ (data, response) in
+        MockedTasksExecutor.execute(session: session, request: request){ (data, response) in
             XCTAssertEqual(returnData, data)
             XCTAssertNil(response)
         }
-        
     }
     
     func testErrorTask() throws {
-        let task = MockedTasksExecutor()
         
         let request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: "url")
         let session = RequestsBuilder().buildUrlSession()
 
-        task.executefailed(session: session, request: request){ (data, response) in
+        MockedTasksExecutor.executefailed(session: session, request: request){ (data, response) in
             XCTAssertNotNil(response)
         }
     }
