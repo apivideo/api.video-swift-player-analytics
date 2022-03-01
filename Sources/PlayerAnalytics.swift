@@ -15,12 +15,31 @@ public class PlayerAnalytics {
     }
   }
 
+  /// Field to call each time the playback time changes (it should be called often, the accuracy of the collected data depends on it).
   var currentTime: Float = 0
 
   public init(options: Options) {
     self.options = options
   }
 
+  /// Method to call when the video starts playing for the first time.
+  /// (in the case of a resume after paused, use resume()).
+  /// - Parameter completion: Invoked when Result is succesful or failed.
+  ///
+  /// example of usage
+  ///
+  ///     // pretend that option is available
+  ///     let analytics = PlayerAnalytics(options: option)
+  ///     analytics.play { (result) in
+  ///         switch result {
+  ///             case .success(let data):
+  ///             print(data)
+  ///             case .failure(let error):
+  ///             print(error)
+  ///         }
+  ///     }
+  ///
+  ///
   public func play(completion: @escaping (Result<Void, Error>) -> Void) {
     schedule()
     addEventAt(Event.PLAY) { (result) in
@@ -28,6 +47,8 @@ public class PlayerAnalytics {
     }
   }
 
+  /// Method to call when the video playback is resumed after a pause.
+  /// - Parameter completion: Invoked when Result is succesful or failed.
   public func resume(completion: @escaping (Result<Void, Error>) -> Void) {
     schedule()
     addEventAt(Event.RESUME) { (result) in
@@ -35,6 +56,8 @@ public class PlayerAnalytics {
     }
   }
 
+  /// Method to call once the player is ready to play the media.
+  /// - Parameter completion: Invoked when Result is succesful or failed.
   public func ready(completion: @escaping (Result<Void, Error>) -> Void) {
     addEventAt(Event.READY) { (result) in
       switch result {
@@ -49,6 +72,8 @@ public class PlayerAnalytics {
     }
   }
 
+  /// Method to call when the video is ended.
+  /// - Parameter completion: Invoked when Result is succesful or failed.
   public func end(completion: @escaping (Result<Void, Error>) -> Void) {
     unSchedule()
     addEventAt(Event.END) { (result) in
@@ -63,6 +88,8 @@ public class PlayerAnalytics {
     }
   }
 
+  /// Method to call when the video is paused.
+  /// - Parameter completion: Invoked when Result is succesful or failed.
   public func pause(completion: @escaping (Result<Void, Error>) -> Void) {
     unSchedule()
     addEventAt(Event.PAUSE) { (result) in
@@ -77,6 +104,11 @@ public class PlayerAnalytics {
     }
   }
 
+  /// Method to call when a seek event occurs.
+  /// - Parameters:
+  ///   - from: Start time in second.
+  ///   - to: End time in second.
+  ///   - completion: Invoked when Result is succesful or failed.
   public func seek(from: Float, to: Float, completion: @escaping (Result<Void, Error>) -> Void) {
     if (from > 0) && (to > 0) {
       var event: Event
@@ -91,6 +123,8 @@ public class PlayerAnalytics {
     }
   }
 
+  /// Method to call when the video player is disposed.
+  /// - Parameter completion: Invoked when Result is succesful or failed.
   public func destroy(completion: @escaping (Result<Void, UrlError>) -> Void) {
     unSchedule()
     completion(.success(()))
