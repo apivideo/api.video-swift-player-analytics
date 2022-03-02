@@ -4,109 +4,129 @@ import ApiVideoPlayerAnalytics
 import UIKit
 
 class ViewController: UIViewController {
-  @IBOutlet weak var videoUrlTextField: UITextField!
-  var api: PlayerAnalytics?
-  var option: Options?
-  var player: AVPlayer? = nil
-  let controller = AVPlayerViewController()
-  private var isFirstPlay = true
-
-  private var videoUrl = "https://cdn.api.video/vod/vi21aJxFa0A1AFM6FPVmjnhA/hls/manifest.m3u8"
-
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    videoUrlTextField.text = videoUrl
-    do {
-      option = try Options(
-        mediaUrl: videoUrl, metadata: [["string 1": "String 2"], ["string 3": "String 4"]],
-        onSessionIdReceived: { (id) in
-          print("session ID : \(id)")
+    @IBOutlet weak var playPauseButton: UIButton!
+    @IBOutlet weak var progressSlider: UISlider!
+    @IBOutlet weak var timeRemainingLabel: UILabel!
+    @IBOutlet weak var videoControllerView: UIView!
+    @IBOutlet weak var goForward15Button: UIButton!
+    @IBOutlet weak var goBackward15Button: UIButton!
+    
+    let videoPlayerView = UIView()
+    var player: AVPlayer?
+    var timeObserver: Any?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        videoPlayerView.backgroundColor = UIColor.black
+        videoPlayerView.translatesAutoresizingMaskIntoConstraints = false
+        let topConstraint = NSLayoutConstraint(item: videoPlayerView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: 0)
+        let bottomConstraint = NSLayoutConstraint(item: videoPlayerView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0)
+        let leadingConstraint = NSLayoutConstraint(item: videoPlayerView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1, constant: 0)
+        let trailingConstraint = NSLayoutConstraint(item: videoPlayerView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1, constant: 0)
+        
+        view.addSubview(videoPlayerView)
+        view.addConstraints([topConstraint, bottomConstraint, leadingConstraint, trailingConstraint])
+        view.sendSubviewToBack(videoPlayerView)
+        
+        
+        
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .landscapeRight
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        setupVideoPlayer()
+    }
+    
+    func setupVideoPlayer() {
+        guard let url = URL(string: "https://cdn.api.video/vod/vi5CVZtXoIIw4QeSl42CeuQk/hls/manifest.m3u8") else {
+            return
+        }
+        player = AVPlayer(url: url)
+        
+        let playerLayer = AVPlayerLayer(player: player)
+        playerLayer.frame = videoPlayerView.bounds;
+        videoPlayerView.layer.addSublayer(playerLayer)
+        player?.isMuted = true
+        let interval = CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        timeObserver = player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { elapsedTime in
+            self.updatePlayerState()
         })
-    } catch {
-      print("error with the url")
+        videoControllerView.backgroundColor = UIColor.darkGray.withAlphaComponent(0.25)
+        videoControllerView.layer.cornerRadius = 20
+        timeRemainingLabel.textColor = UIColor.orange
+        progressSlider.tintColor = UIColor.orange.withAlphaComponent(0.7)
+        progressSlider.thumbTintColor = UIColor.orange
+        playPauseButton.tintColor = UIColor.orange
+        goForward15Button.tintColor = UIColor.orange
+        goBackward15Button.tintColor = UIColor.orange
     }
-    print(option!.videoInfo.videoType.rawValue)
+    
+    func updatePlayerState() {
+        guard let currentTime = player?.currentTime() else { return }
+        let currentTimeInSeconds = CMTimeGetSeconds(currentTime)
+        progressSlider.value = Float(currentTimeInSeconds)
+        if let currentItem = player?.currentItem {
+            let duration = currentItem.duration
+            if (CMTIME_IS_INVALID(duration)) {
+                return;
+            }
+            let currentTime = currentItem.currentTime()
+            progressSlider.value = Float(CMTimeGetSeconds(currentTime) / CMTimeGetSeconds(duration))
+            
+            // Update time remaining label
+            let totalTimeInSeconds = CMTimeGetSeconds(duration)
+            let remainingTimeInSeconds = totalTimeInSeconds - currentTimeInSeconds
 
-    api = PlayerAnalytics(options: option!)
-  }
-
-  private func setupAVPlayer() {
-    player!.addObserver(self, forKeyPath: "status", options: [.old, .new], context: nil)
-    player!.addObserver(self, forKeyPath: "rate", options: [.old, .new], context: nil)
-    NotificationCenter.default.addObserver(
-      self, selector: #selector(playerDidFinishPlaying),
-      name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.currentItem)
-
-  }
-
-  @objc func playerDidFinishPlaying(note: NSNotification) {
-    print("dismiss player")
-    self.controller.dismiss(animated: true)
-  }
-
-  override func observeValue(
-    forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?,
-    context: UnsafeMutableRawPointer?
-  ) {
-    if object as AnyObject? === player {
-      if keyPath == "status" {
-        if player!.status == .readyToPlay {
-          self.api?.ready { (error) in
-            print("ready done")
-          }
+            let mins = remainingTimeInSeconds / 60
+            let secs = remainingTimeInSeconds.truncatingRemainder(dividingBy: 60)
+            let timeformatter = NumberFormatter()
+            timeformatter.minimumIntegerDigits = 2
+            timeformatter.minimumFractionDigits = 0
+            timeformatter.roundingMode = .down
+            guard let minsStr = timeformatter.string(from: NSNumber(value: mins)), let secsStr = timeformatter.string(from: NSNumber(value: secs)) else {
+                return
+            }
+            timeRemainingLabel.text = "\(minsStr):\(secsStr)"
         }
-      } else if keyPath == "rate" {
-        if player!.rate > 0 {
-          if isFirstPlay {
-            self.api!.play { (result) in
-              switch result {
-              case .success(let data):
-                print("play")
-                print(data)
-              case .failure(let error):
-                print(error)
-              }
-            }
-
-          } else {
-            self.api!.resume { (result) in
-              switch result {
-              case .success(let data):
-                print("resume")
-                print(data)
-              case .failure(let error):
-                print(error)
-              }
-            }
-          }
-
-        } else {
-          self.api!.pause { (result) in
-            switch result {
-            case .success(let data):
-              print("pause")
-              print(data)
-            case .failure(let error):
-              print(error)
-            }
-          }
-        }
-      }
     }
-  }
-
-  @IBAction func playVideo(_ sender: Any) {
-    player = AVPlayer(playerItem: nil)
-    player?.replaceCurrentItem(with: AVPlayerItem(url: URL(string: videoUrlTextField.text!)!))
-    self.controller.player = player
-    setupAVPlayer()
-    //let seekTime = PlayerPlaybackT
-    //        let seekTime = PlayerPlaybackTimeFormatter.getConvertedCMTimeByProgress(player: player, progress: progressWhenSliderIsReleased)
-    //        player!.seek(to: seekTime, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
-    //            guard let `self` = self else { return }
-    //            print("Player time after seeking: \(CMTimeGetSeconds(self.player.currentTime()))")
-    //        }
-    present(controller, animated: true) {}
-
-  }
+    
+    @IBAction func playPauseSelected(_ sender: Any) {
+        
+        guard let player = player else{return}
+        if !player.isPlaying{
+            player.play()
+            playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        }else{
+            playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+            player.pause()
+        }
+    }
+    @IBAction func playbackSliderValueChanged(_ sender: UISlider) {
+        guard let duration = player?.currentItem?.duration else { return }
+        let value = Float64(progressSlider.value) * CMTimeGetSeconds(duration)
+        let seekTime = CMTime(value: CMTimeValue(value), timescale: 1)
+        player?.seek(to: seekTime )
+    }
+    
+    @IBAction func goForward(_ sender: Any) {
+        guard let currentTime = player?.currentTime() else { return }
+            let currentTimeInSecondsPlus15 =  CMTimeGetSeconds(currentTime).advanced(by: 15)
+            let seekTime = CMTime(value: CMTimeValue(currentTimeInSecondsPlus15), timescale: 1)
+            player?.seek(to: seekTime)
+    }
+    @IBAction func goBackward(_ sender: Any) {
+        guard let currentTime = player?.currentTime() else { return }
+            let currentTimeInSecondsMinus15 =  CMTimeGetSeconds(currentTime).advanced(by: -15)
+            let seekTime = CMTime(value: CMTimeValue(currentTimeInSecondsMinus15), timescale: 1)
+            player?.seek(to: seekTime)
+    }
+}
+extension AVPlayer{
+    var isPlaying: Bool{
+        return rate != 0 && error == nil
+    }
 }
