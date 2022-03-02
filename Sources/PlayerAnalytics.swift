@@ -5,7 +5,7 @@ public class PlayerAnalytics {
 
   private var options: Options
   private static let playbackDelay = 10 * 1000
-  private var timer: Timer?
+  private var timer = Timer()
   private var eventsStack = [PingEvent]()
   private let loadedAt = Date().preciseLocalTime
 
@@ -137,14 +137,15 @@ public class PlayerAnalytics {
   }
 
   private func schedule() {
-    timer = Timer.scheduledTimer(
-      withTimeInterval: 10, repeats: true,
-      block: { _ in
-        self.timerAction()
-      })
+      timer = Timer.scheduledTimer(
+        timeInterval: 10,
+        target: self,
+        selector: #selector(self.timerAction),
+        userInfo: nil,
+        repeats: true)
   }
 
-  private func timerAction() {
+  @objc private func timerAction() {
     sendPing(payload: buildPingPayload()) { (result) in
       switch result {
       case .success(let data):
@@ -158,7 +159,8 @@ public class PlayerAnalytics {
   }
 
   private func unSchedule() {
-    timer?.invalidate()
+    timer.invalidate()
+    timer = Timer()
   }
 
   private func buildPingPayload() -> PlaybackPingMessage {
