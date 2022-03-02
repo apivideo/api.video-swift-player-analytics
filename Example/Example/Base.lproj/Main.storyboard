@@ -45,7 +45,7 @@
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="nEv-wG-L6I">
                                         <rect key="frame" x="3" y="15" width="715" height="31"/>
                                         <connections>
-                                            <action selector="playbackSliderValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="OqY-CP-B64"/>
+                                            <action selector="playbackSliderValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="NqX-TY-dmP"/>
                                         </connections>
                                     </slider>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZNR-YE-dsg">
@@ -80,12 +80,14 @@
                         <constraints>
                             <constraint firstItem="mGu-7k-AUg" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="0eW-bO-g8n"/>
                             <constraint firstItem="lqg-68-h5k" firstAttribute="centerY" secondItem="mGu-7k-AUg" secondAttribute="centerY" id="98f-0J-w41"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Abf-ai-aEb" secondAttribute="trailing" constant="177" id="IvM-gd-QsM"/>
                             <constraint firstItem="mGu-7k-AUg" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="NG0-1U-vOJ"/>
                             <constraint firstItem="Abf-ai-aEb" firstAttribute="centerY" secondItem="mGu-7k-AUg" secondAttribute="centerY" id="PzG-QO-WSC"/>
                             <constraint firstItem="FQX-Ur-cfP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Y7V-SM-M50"/>
-                            <constraint firstItem="Abf-ai-aEb" firstAttribute="leading" secondItem="mGu-7k-AUg" secondAttribute="trailing" constant="160" id="he4-gZ-hIJ"/>
+                            <constraint firstItem="lqg-68-h5k" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="177" id="cQU-Yz-laB"/>
+                            <constraint firstItem="Abf-ai-aEb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="mGu-7k-AUg" secondAttribute="trailing" constant="8" symbolic="YES" id="he4-gZ-hIJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="FQX-Ur-cfP" secondAttribute="bottom" constant="20" id="mOa-9X-fbI"/>
-                            <constraint firstItem="mGu-7k-AUg" firstAttribute="leading" secondItem="lqg-68-h5k" secondAttribute="trailing" constant="160" id="sZp-d4-NS3"/>
+                            <constraint firstItem="mGu-7k-AUg" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="lqg-68-h5k" secondAttribute="trailing" constant="8" symbolic="YES" id="sZp-d4-NS3"/>
                         </constraints>
                     </view>
                     <connections>
