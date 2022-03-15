@@ -39,7 +39,7 @@ This is useful if you are using a video player for which we do not yet provide a
 ### Swift Package Manager
 In the Project Navigator select your own project. Then select the project in the Project section and click on the Package Dependencies tab. Click on the "+" button at the bottom. Paste the below url on the search bar on the top right. Finaly click on "Add package" button.
 ```
- https://github.com/apivideo/api.video-ios-player-analytics.swift
+ https://github.com/apivideo/api.video-ios-player-analytics
 ```
 Or add this in your Package.swift
 ```
