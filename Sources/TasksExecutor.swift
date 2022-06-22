@@ -7,7 +7,11 @@ public class TasksExecutor: TasksExecutorProtocol {
   ) {
 
     let task = session.dataTask(with: request) { (data, response, error) in
-      completion(data, error)
+        if(data?.count == 0){
+            completion(data, UrlError.jsonError("error 400"))
+        }else{
+            completion(data, error)
+        }
     }
     task.resume()
   }

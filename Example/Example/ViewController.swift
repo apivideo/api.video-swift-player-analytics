@@ -26,7 +26,7 @@ class ViewController: UIViewController {
     var playerAnalytics: PlayerAnalytics?
     var option : Options?
     var isFistPlayed = true
-    let videoLink = "https://cdn.api.video/vod/vi5CVZtXoIIw4QeSl42CeuQk/hls/manifest.m3u8"
+    let videoLink = "https://cdn.api.video/vod/vi2dCZuqERiAFyW9q0Y8k60a/hls/manifest.m3u8"
     var videoUrl: URL!
     
     
@@ -54,7 +54,7 @@ class ViewController: UIViewController {
         playerAnalytics = PlayerAnalytics(options: option!)
         
         //Player
-        progressSlider.isContinuous = false
+       // progressSlider.isContinuous = false
         
         videoPlayerView.backgroundColor = UIColor.black
         videoPlayerView.translatesAutoresizingMaskIntoConstraints = false
@@ -82,7 +82,7 @@ class ViewController: UIViewController {
         let playerLayer = AVPlayerLayer(player: player)
         playerLayer.frame = videoPlayerView.bounds;
         videoPlayerView.layer.addSublayer(playerLayer)
-        player?.isMuted = true
+        player?.isMuted = false
         let interval = CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         timeObserver = player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { elapsedTime in
             self.updatePlayerState()

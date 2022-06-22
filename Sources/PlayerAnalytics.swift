@@ -68,7 +68,6 @@ public class PlayerAnalytics {
       case .failure(_):
         completion(result)
       }
-
     }
   }
 
@@ -201,12 +200,16 @@ public class PlayerAnalytics {
     TasksExecutor.execute(session: session, request: request) { (data, error) in
       if data != nil {
         let json = try? JSONSerialization.jsonObject(with: data!) as? [String: AnyObject]
-        if let mySession = json!["session"] as? String {
+        if let mySession = json?["session"] as? String {
           if self.sessionId == nil {
             self.sessionId = mySession
           }
         }
-        completion(.success(()))
+          if(json == nil){
+              completion(.failure(error!))
+          }else{
+              completion(.success(()))
+          }
       } else {
         completion(.failure(error!))
       }
