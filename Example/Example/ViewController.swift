@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     var player: AVPlayer!
     var asset: AVAsset!
     var playerItem: AVPlayerItem!
+    var fromCMTime : CMTime!
     
     private var playerItemContext = 0
     let requiredAssetKeys = [
@@ -26,7 +27,7 @@ class ViewController: UIViewController {
     var playerAnalytics: PlayerAnalytics?
     var option : Options?
     var isFistPlayed = true
-    let videoLink = "https://cdn.api.video/vod/vi2dCZuqERiAFyW9q0Y8k60a/hls/manifest.m3u8"
+    let videoLink = "https://cdn.api.video/vod/vi2eA9xOqVapksfhmhFQ348h/hls/manifest.m3u8"
     var videoUrl: URL!
     
     
@@ -66,6 +67,7 @@ class ViewController: UIViewController {
         view.addSubview(videoPlayerView)
         view.addConstraints([topConstraint, bottomConstraint, leadingConstraint, trailingConstraint])
         view.sendSubviewToBack(videoPlayerView)
+        progressSlider.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -165,19 +167,36 @@ class ViewController: UIViewController {
         }
     }
     
-    @IBAction func playbackSliderValueChanged(_ sender: UISlider) {
-        player.pause()
+    
+    @objc func onSliderValChanged(slider: UISlider, event: UIEvent) {
         guard let duration = player?.currentItem?.duration else { return }
-        let value = Float64(progressSlider.value) * CMTimeGetSeconds(duration)
-        let seekTime = CMTime(value: CMTimeValue(value), timescale: 1)
-        let currentTime = CMTimeGetSeconds(player!.currentTime())
-        player?.seek(to: seekTime)
-        playerAnalytics?.seek(from:Float(currentTime), to: Float(seekTime.seconds)){(result) in
-            switch result{
-            case .success(_):
-                print("success seek")
-            case .failure(let error):
-                print("error seek : \(error)")
+        player.pause()
+        
+        if let touchEvent = event.allTouches?.first {
+            switch touchEvent.phase {
+            case .began:
+                // handle drag began
+                fromCMTime = CMTime(value: CMTimeValue(Float64(slider.value) * CMTimeGetSeconds(duration)), timescale: 1)
+            case .moved:
+                // handle drag moved
+                break
+            case .ended:
+                // handle drag ended
+                let value = Float64(progressSlider.value) * CMTimeGetSeconds(duration)
+                let seekTime = CMTime(value: CMTimeValue(value), timescale: 1)
+                let currentTime = fromCMTime.seconds
+                player.seek(to: seekTime)
+                playerAnalytics?.seek(from:Float(currentTime), to: Float(seekTime.seconds)){(result) in
+                    switch result{
+                    case .success(_):
+                        print("success seek")
+                        self.player.play()
+                    case .failure(let error):
+                        print("error seek : \(error)")
+                    }
+                }
+            default:
+                break
             }
         }
     }
