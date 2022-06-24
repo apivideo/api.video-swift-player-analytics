@@ -83,7 +83,6 @@ public class PlayerAnalytics {
       switch result {
       case .success(_):
         self.sendPing(payload: self.buildPingPayload()) { (res) in
-            self.cleanEventsStack()
           completion(res)
         }
       case .failure(_):
@@ -100,7 +99,6 @@ public class PlayerAnalytics {
       switch result {
       case .success(_):
         self.sendPing(payload: self.buildPingPayload()) { (res) in
-            self.cleanEventsStack()
           completion(res)
         }
       case .failure(_):
@@ -153,9 +151,7 @@ public class PlayerAnalytics {
   @objc private func timerAction() {
     sendPing(payload: buildPingPayload()) { (result) in
       switch result {
-      case .success(let data):
-        print("schedule sended")
-        print(data)
+      case .success(_):break
       case .failure(let error):
         print(error)
       }
@@ -190,7 +186,6 @@ public class PlayerAnalytics {
   ) {
       if(eventsStack.count > 0){
           var request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: options.videoInfo.pingUrl)
-          print(options.videoInfo.pingUrl)
           var body: [String: Any] = [:]
           let encoder = JSONEncoder()
           encoder.outputFormatting = .prettyPrinted
