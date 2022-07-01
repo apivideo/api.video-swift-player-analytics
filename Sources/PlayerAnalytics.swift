@@ -188,32 +188,35 @@ public class PlayerAnalytics {
           var request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: options.videoInfo.pingUrl)
           var body: [String: Any] = [:]
           let encoder = JSONEncoder()
-          var jsonPayload: Data!
-
-          do{
-              jsonPayload = try encoder.encode(payload)
-              
-              let data = String(data: jsonPayload, encoding: .utf8)!.data(using: .utf8)!
-              body = try (JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])!
-              request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-          }catch{
-              completion(.failure(error))
+          guard let jsonpayload = try? encoder.encode(payload) else {
+              completion(.failure(JSONError.serializationError("Error with json payload")))
+              return
           }
           
+          if let data = String(data: jsonpayload, encoding: .utf8)?.data(using: .utf8) {
+              do {
+                  body = try (JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])!
+                  request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+              } catch {
+                  completion(.failure(error))
+              }
+          }else{
+              completion(.failure(JSONError.serializationError("Error, could not find data with json")))
+          }
           let session = RequestsBuilder().buildUrlSession()
           TasksExecutor.execute(session: session, request: request) { (data, error) in
               if data != nil {
-                  var json: [String: AnyObject]
-                  do{
-                      json = try JSONSerialization.jsonObject(with: data!) as! [String: AnyObject]
-                      let mySession = json["session"] as! String
+                  let json = try? JSONSerialization.jsonObject(with: data!) as? [String: AnyObject]
+                  if let mySession = json?["session"] as? String {
                       if self.sessionId == nil {
                           self.sessionId = mySession
                       }
+                  }
+                  if(json == nil){
+                      completion(.failure(error!))
+                  }else{
                       self.cleanEventsStack()
                       completion(.success(()))
-                  }catch{
-                      completion(.failure(error))
                   }
               } else {
                   completion(.failure(error!))
