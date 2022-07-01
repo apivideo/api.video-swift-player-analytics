@@ -27,7 +27,7 @@ class ViewController: UIViewController {
     var playerAnalytics: PlayerAnalytics?
     var option : Options?
     var isFistPlayed = true
-    let videoLink = "https://cdn.api.video/vod/vi2eA9xOqVapksfhmhFQ348h/hls/manifest.m3u8"
+    let videoLink = "https://cdn.api.video/vod/YOUR_VIDEO_ID/hls/manifest.m3u8"
     var videoUrl: URL!
     
     
