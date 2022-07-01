@@ -188,16 +188,20 @@ public class PlayerAnalytics {
           var request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: options.videoInfo.pingUrl)
           var body: [String: Any] = [:]
           let encoder = JSONEncoder()
-          encoder.outputFormatting = .prettyPrinted
-          let jsonpayload = try! encoder.encode(payload)
+          guard let jsonpayload = try? encoder.encode(payload) else {
+              completion(.failure(JSONError.serializationError("Error with json payload")))
+              return
+          }
           
           if let data = String(data: jsonpayload, encoding: .utf8)?.data(using: .utf8) {
               do {
                   body = try (JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])!
-                  request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+                  request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
               } catch {
                   completion(.failure(error))
               }
+          }else{
+              completion(.failure(JSONError.serializationError("Error, could not find data with json")))
           }
           let session = RequestsBuilder().buildUrlSession()
           TasksExecutor.execute(session: session, request: request) { (data, error) in
