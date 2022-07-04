@@ -5,19 +5,19 @@ on:
       - master
 jobs:
     update-api-documentation:
-    runs-on: macos-latest
-    steps:
-        - name: generate doc files
-          run: xcodebuild docbuild -scheme ApiVideoPlayerAnalytics -derivedDataPath ../api.video-ios-player-analytics/api.video-ios-player-aalytics-build -destination 'platform=iOS Simulator,name=iPhone 12'
-        - name: copy generated docarchive
-          run: cp -R `find ../api.video-ios-player-analytics/api.video-ios-player-aalytics-build -type d -name 'ApiVideoPlayerAnalytics.doccarchive'` Docs/ApiVideoPlayerAnalytics.doccarchive
-        - name: process docarchive
-          run: $(xcrun --find docc) process-archive \ transform-for-static-hosting ../api.video-ios-player-analytics/Docs \ --output-path ../api.video-ios-player-analytics/Docs \ --hosting-base-path apivideo.github.io/api.video-ios-player-analytics
-        - name: Deploy documentation to Github Pages
-        uses: JamesIves/github-pages-deploy-action@3.7.1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
+        runs-on: macos-latest
+        steps:
+            name: generate doc files
+            run: xcodebuild docbuild -scheme ApiVideoPlayerAnalytics -derivedDataPath ../api.video-ios-player-analytics/api.video-ios-player-aalytics-build -destination 'platform=iOS Simulator,name=iPhone 12'
+            name: copy generated docarchive
+            run: cp -R `find ../api.video-ios-player-analytics/api.video-ios-player-aalytics-build -type d -name 'ApiVideoPlayerAnalytics.doccarchive'` Docs/ApiVideoPlayerAnalytics.doccarchive
+            name: process docarchive
+            run: $(xcrun --find docc) process-archive \ transform-for-static-hosting ../api.video-ios-player-analytics/Docs \ --output-path ../api.video-ios-player-analytics/Docs \ --hosting-base-path apivideo.github.io/api.video-ios-player-analytics
+            name: Deploy documentation to Github Pages
+            uses: JamesIves/github-pages-deploy-action@3.7.1
+            with:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            BRANCH: gh-pages
         
     
 
