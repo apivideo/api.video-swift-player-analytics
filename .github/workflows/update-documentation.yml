@@ -13,9 +13,9 @@ jobs:
               run: mkdir ../api.video-ios-player-analytics/Docs
             - name: process docarchive
               run: $(xcrun --find docc) process-archive \
-transform-for-static-hosting ../api.video-ios-player-analytics/api.video-ios-player-analytics-build/Build/Products/Debug-iphonesimulator/ApiVideoPlayerAnalytics.doccarchive \
---output-path ../api.video-ios-player-analytics/Docs \
---hosting-base-path https://apivideo.github.io/api.video-ios-player-analytics
+              transform-for-static-hosting ../api.video-ios-player-analytics/api.video-ios-player-analytics-build/Build/Products/Debug-iphonesimulator/ApiVideoPlayerAnalytics.doccarchive \
+              --output-path ../api.video-ios-player-analytics/Docs \
+              --hosting-base-path https://apivideo.github.io/api.video-ios-player-analytics
             - name: Deploy documentation to Github Pages
               uses: JamesIves/github-pages-deploy-action@3.7.1
               with:
