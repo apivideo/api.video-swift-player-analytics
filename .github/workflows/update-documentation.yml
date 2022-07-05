@@ -5,20 +5,24 @@ on:
       - sample
 jobs:
     update-api-documentation:
-        runs-on: macos-latest
+        runs-on: macos-12
         steps:
+            - uses: actions/checkout@v2 
+            - uses: maxim-lobanov/setup-xcode@v1
+              with:
+                xcode-version: '13.3'       
             - name: generate doc files
-              run: xcodebuild docbuild -scheme ApiVideoPlayerAnalytics -derivedDataPath ~/api.video-ios-player-analytics-build -destination 'platform=iOS Simulator,name=iPhone 12'
+              run: xcodebuild docbuild -scheme ApiVideoPlayerAnalytics -derivedDataPath ../api.video-ios-player-analytics-build -destination 'platform=iOS Simulator,name=iPhone 12'
             - name: create docs folder
-              run: mkdir ../api.video-ios-player-analytics/Docs
+              run: mkdir ../Docs
             - name: process docarchive
-              run: $(xcrun --find docc) process-archive \transform-for-static-hosting ../api.video-ios-player-analytics-build/Build/Products/Debug-iphonesimulator/ApiVideoPlayerAnalytics.doccarchive \--output-path ../Docs \--hosting-base-path https://apivideo.github.io/api.video-ios-player-analytics
+              run: $(xcrun --find docc) process-archive \transform-for-static-hosting ../api.video-ios-player-analytics-build/Build/Products/Debug-iphonesimulator/ApiVideoPlayerAnalytics.doccarchive \--output-path ../Docs \--hosting-base-path /api.video-ios-player-analytics 
             - name: Deploy documentation to Github Pages
               uses: JamesIves/github-pages-deploy-action@3.7.1
               with:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 BRANCH: gh-pages
-                FOLDER: Docs
+                FOLDER: ../Docs
         
     
 
