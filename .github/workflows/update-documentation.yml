@@ -2,7 +2,7 @@ name: Update Docc documentation
 on:
   push:
     branches:
-      - master
+      - sample
 jobs:
     update-api-documentation:
         runs-on: macos-latest
