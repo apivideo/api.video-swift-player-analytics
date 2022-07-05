@@ -8,7 +8,7 @@ jobs:
         runs-on: macos-latest
         steps:
             - name: generate doc files
-              run: xcodebuild docbuild -scheme ApiVideoPlayerAnalytics -derivedDataPath ../api.video-ios-player-analytics/api.video-ios-player-analytics-build -destination 'platform=iOS Simulator,name=iPhone 12'
+              run: xcodebuild docbuild -scheme ApiVideoPlayerAnalytics -derivedDataPath ../api.video-ios-player-analytics-build -destination 'platform=iOS Simulator,name=iPhone 12'
             - name: create docs folder
               run: mkdir ../api.video-ios-player-analytics/Docs
             - name: process docarchive
