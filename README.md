@@ -44,11 +44,11 @@ In the Project Navigator select your own project. Then select the project in the
 Or add this in your Package.swift
 ```
   dependencies: [
-        .package(url: "https://github.com/apivideo/api.video-ios-player-analytics.git", from: "1.0.0"),
+        .package(url: "https://github.com/apivideo/api.video-ios-player-analytics.git", from: "1.0.1"),
     ],
 ```
 ### Cocoapods
-Add `pod 'ApiVideoPlayerAnalytics', '1.0.0'` in your `Podfile`
+Add `pod 'ApiVideoPlayerAnalytics', '1.0.1'` in your `Podfile`
 
 Run `pod install`
 

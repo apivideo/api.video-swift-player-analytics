@@ -19,13 +19,13 @@ https://github.com/apivideo/api.video-ios-player-analytics.swift
 Or add this in your Package.swift
 ```
 dependencies: [
-.package(url: "https://github.com/apivideo/api.video-ios-player-analytics.git", from: "1.0.0"),
+.package(url: "https://github.com/apivideo/api.video-ios-player-analytics.git", from: "1.0.1"),
 ],
 ```
 ### Cocoapods
 Add in your `Podfile`
 ```
-pod 'ApiVideoPlayerAnalytics', '1.0.0'
+pod 'ApiVideoPlayerAnalytics', '1.0.1'
 ```
 
 Then run 
