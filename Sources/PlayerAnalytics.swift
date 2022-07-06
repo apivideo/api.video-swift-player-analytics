@@ -5,7 +5,7 @@ public class PlayerAnalytics {
 
   private var options: Options
   private static let playbackDelay = 10 * 1000
-  private var timer: Timer?
+  private var timer: Timer? = nil
   private var eventsStack = [PingEvent]()
   private let loadedAt = Date().preciseLocalTime
 
@@ -41,16 +41,20 @@ public class PlayerAnalytics {
   ///
   ///
   public func play(completion: @escaping (Result<Void, Error>) -> Void) {
-    schedule()
-    addEventAt(Event.PLAY) { (result) in
-      completion(result)
-    }
+      if(timer == nil){
+          schedule()
+      }
+      addEventAt(Event.PLAY) { (result) in
+          completion(result)
+      }
   }
 
   /// Method to call when the video playback is resumed after a pause.
   /// - Parameter completion: Invoked when Result is succesful or failed.
   public func resume(completion: @escaping (Result<Void, Error>) -> Void) {
-    schedule()
+      if(timer == nil){
+          schedule()
+      }
     addEventAt(Event.RESUME) { (result) in
       completion(result)
     }
@@ -68,7 +72,6 @@ public class PlayerAnalytics {
       case .failure(_):
         completion(result)
       }
-
     }
   }
 
@@ -137,19 +140,18 @@ public class PlayerAnalytics {
   }
 
   private func schedule() {
-    timer = Timer.scheduledTimer(
-      withTimeInterval: 10, repeats: true,
-      block: { _ in
-        self.timerAction()
-      })
+      timer = Timer.scheduledTimer(
+        timeInterval: 10,
+        target: self,
+        selector: #selector(self.timerAction),
+        userInfo: nil,
+        repeats: true)
   }
 
-  private func timerAction() {
+  @objc private func timerAction() {
     sendPing(payload: buildPingPayload()) { (result) in
       switch result {
-      case .success(let data):
-        print("schedule sended")
-        print(data)
+      case .success(_):break
       case .failure(let error):
         print(error)
       }
@@ -159,6 +161,7 @@ public class PlayerAnalytics {
 
   private func unSchedule() {
     timer?.invalidate()
+    timer = nil
   }
 
   private func buildPingPayload() -> PlaybackPingMessage {
@@ -173,43 +176,55 @@ public class PlayerAnalytics {
         sessionId: sessionId, loadedAt: loadedAt, videoId: options.videoInfo.videoId, referrer: "",
         metadata: options.metadata)
     }
-
-    return PlaybackPingMessage(
-      emittedAt: Date().preciseLocalTime, session: session, events: eventsStack)
+      
+      return PlaybackPingMessage(
+        emittedAt: Date().preciseLocalTime, session: session, events: eventsStack)
   }
 
   private func sendPing(
     payload: PlaybackPingMessage, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    var request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: options.videoInfo.pingUrl)
-    var body: [String: Any] = [:]
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = .prettyPrinted
-    let jsonpayload = try! encoder.encode(payload)
+      if(eventsStack.count > 0){
+          var request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: options.videoInfo.pingUrl)
+          var body: [String: Any] = [:]
+          let encoder = JSONEncoder()
+          var jsonPayload: Data!
 
-    if let data = String(data: jsonpayload, encoding: .utf8)?.data(using: .utf8) {
-      do {
-        body = try (JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])!
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
-      } catch {
-        completion(.failure(error))
-      }
-    }
-    let session = RequestsBuilder().buildUrlSession()
-    TasksExecutor.execute(session: session, request: request) { (data, error) in
-      if data != nil {
-        let json = try? JSONSerialization.jsonObject(with: data!) as? [String: AnyObject]
-        if let mySession = json!["session"] as? String {
-          if self.sessionId == nil {
-            self.sessionId = mySession
+          do{
+              jsonPayload = try encoder.encode(payload)
+              
+              let data = String(data: jsonPayload, encoding: .utf8)!.data(using: .utf8)!
+              body = try (JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])!
+              request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+          }catch{
+              completion(.failure(error))
           }
-        }
-        completion(.success(()))
-      } else {
-        completion(.failure(error!))
+          
+          let session = RequestsBuilder().buildUrlSession()
+          TasksExecutor.execute(session: session, request: request) { (data, error) in
+              if data != nil {
+                  var json: [String: AnyObject]
+                  do{
+                      json = try JSONSerialization.jsonObject(with: data!) as! [String: AnyObject]
+                      let mySession = json["session"] as! String
+                      if self.sessionId == nil {
+                          self.sessionId = mySession
+                      }
+                      self.cleanEventsStack()
+                      completion(.success(()))
+                  }catch{
+                      completion(.failure(error))
+                  }
+              } else {
+                  completion(.failure(error!))
+              }
+          }
       }
-    }
   }
+    
+    private func cleanEventsStack(){
+        eventsStack.removeAll()
+    }
 }
 extension String {
   public func toVideoType() throws -> VideoType {
