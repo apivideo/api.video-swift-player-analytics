@@ -31,7 +31,10 @@ extension URLSession {
                 completionHandler(Result.failure(HTTPError.transportError(error)))
                 return
             }
-            let response = response as! HTTPURLResponse
+            guard let response = response as? HTTPURLResponse else {
+                completionHandler(.failure(UrlError.urlResponseError("Could not cast response to HTTPURLResponse")))
+                return
+            }
             let status = response.statusCode
             guard (200 ... 299).contains(status) else {
                 completionHandler(Result.failure(HTTPError.serverSideError(status)))

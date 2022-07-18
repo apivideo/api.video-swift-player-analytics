@@ -207,8 +207,14 @@ public class PlayerAnalytics {
                 if data != nil {
                     var json: [String: AnyObject]
                     do {
-                        json = try JSONSerialization.jsonObject(with: data!) as! [String: AnyObject]
-                        let mySession = json["session"] as! String
+                        guard let json = try JSONSerialization.jsonObject(with: data!) as? [String: AnyObject] else {
+                            completion(.failure(JSONError.castError("Could not cast json to [String: AnyObject]")))
+                            return
+                        }
+                        guard let mySession = json["session"] as? String else {
+                            completion(.failure(JSONError.castError("Could not cast session Id from JSON")))
+                            return
+                        }
                         if self.sessionId == nil {
                             self.sessionId = mySession
                         }
