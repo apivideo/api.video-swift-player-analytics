@@ -1,6 +1,6 @@
 import Foundation
 
 public enum VideoType: String {
-  case VOD = "vod"
-  case LIVE = "live"
+    case VOD = "vod"
+    case LIVE = "live"
 }
