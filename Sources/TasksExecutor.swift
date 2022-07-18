@@ -6,8 +6,13 @@ public class TasksExecutor: TasksExecutorProtocol {
         session: URLSession, request: URLRequest, completion: @escaping (Data?, Error?) -> Void
     ) {
         
-        let task = session.dataTask(with: request) { (data, response, error) in
-            completion(data, error)            
+        let task = session.dataTask(with: request) { (result) in
+            switch result {
+            case .success((_, let data)):
+                completion(data, nil)
+            case .failure(let error):
+                completion(nil, error)
+            }
         }
         task.resume()
     }
