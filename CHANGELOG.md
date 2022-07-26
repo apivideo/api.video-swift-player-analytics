@@ -1,5 +1,9 @@
 # Changelog
 All changes to this project will be documented in this file.
+
+## [1.0.3] - 2022-07-26
+- Fix cocoapods release
+
 ## [1.0.2] - 2022-07-22
 - Fix handle server error
 
