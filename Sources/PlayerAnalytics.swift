@@ -204,10 +204,9 @@ public class PlayerAnalytics {
 
             let session = RequestsBuilder().buildUrlSession()
             TasksExecutor.execute(session: session, request: request) { data, error in
-                if data != nil {
-                    var json: [String: AnyObject]
+                if let data = data {
                     do {
-                        guard let json = try JSONSerialization.jsonObject(with: data!) as? [String: AnyObject] else {
+                        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: AnyObject] else {
                             completion(.failure(JSONError.castError("Could not cast json to [String: AnyObject]")))
                             return
                         }
@@ -223,8 +222,10 @@ public class PlayerAnalytics {
                     } catch {
                         completion(.failure(error))
                     }
+                } else if let error = error {
+                    completion(.failure(error))
                 } else {
-                    completion(.failure(error!))
+                    print("Unknown error")
                 }
             }
         }
