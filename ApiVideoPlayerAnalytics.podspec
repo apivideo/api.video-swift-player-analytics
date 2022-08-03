@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'ApiVideoPlayerAnalytics'
-  s.version          = '1.0.3'
+  s.version          = '1.0.4'
   s.summary          = 'The official Swift player analytics for api.video'
 
   s.homepage         = 'https://github.com/apivideo/api.video-ios-player-analytics'
