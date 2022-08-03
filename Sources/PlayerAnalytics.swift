@@ -1,5 +1,5 @@
 import Foundation
-
+import AVFoundation
 @available(iOS 11.0, *)
 public class PlayerAnalytics {
     private var options: Options
@@ -124,6 +124,22 @@ public class PlayerAnalytics {
             completion(.success(()))
         }
     }
+    
+    /// Method to call when a seek event occurs.
+    /// - Parameters:
+    ///   - from: Start time in second.
+    ///   - to: End time in second.
+    ///   - completion: Invoked when Result is succesful or failed.
+    public func seek(from: CMTime, to: CMTime, completion: @escaping (Result<Void, Error>) -> Void) {
+        seek(from: Float(from.seconds), to: Float(to.seconds)){ result in
+            switch result {
+            case .success:
+                completion(.success(()))
+            case let .failure(error):
+                completion(.failure(error))
+            }
+        }
+    }
 
     /// Method to call when the video player is disposed.
     /// - Parameter completion: Invoked when Result is succesful or failed.
@@ -188,15 +204,14 @@ public class PlayerAnalytics {
     ) {
         if eventsStack.count > 0 {
             var request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: options.videoInfo.pingUrl)
-            var body: [String: Any] = [:]
-            let encoder = JSONEncoder()
-            var jsonPayload: Data!
+            
 
             do {
-                jsonPayload = try encoder.encode(payload)
+                let encoder = JSONEncoder()
+                let jsonPayload = try encoder.encode(payload)
 
                 let data = String(data: jsonPayload, encoding: .utf8)!.data(using: .utf8)!
-                body = try (JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])!
+                let body = try (JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])!
                 request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
             } catch {
                 completion(.failure(error))
