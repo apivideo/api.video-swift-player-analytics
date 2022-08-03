@@ -131,14 +131,7 @@ public class PlayerAnalytics {
     ///   - to: End time in second.
     ///   - completion: Invoked when Result is succesful or failed.
     public func seek(from: CMTime, to: CMTime, completion: @escaping (Result<Void, Error>) -> Void) {
-        seek(from: Float(from.seconds), to: Float(to.seconds)){ result in
-            switch result {
-            case .success:
-                completion(.success(()))
-            case let .failure(error):
-                completion(.failure(error))
-            }
-        }
+        seek(from: Float(from.seconds), to: Float(to.seconds), completion: completion)
     }
 
     /// Method to call when the video player is disposed.
