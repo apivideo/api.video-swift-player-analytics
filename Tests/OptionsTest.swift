@@ -22,7 +22,7 @@ class OptionsTest: XCTestCase {
         )
         XCTAssertEqual(option.videoInfo.videoId, "YOUR_VIDEO_ID")
         XCTAssertEqual(option.videoInfo.videoType, VideoType.VOD)
-        XCTAssertEqual(option.videoInfo.pingUrl, "https://collector.api.video/vod")
+        XCTAssertEqual(option.videoInfo.pingUrl.absoluteString, "https://collector.api.video/vod")
     }
 
     func testValidVodUrl() throws {
@@ -32,7 +32,7 @@ class OptionsTest: XCTestCase {
         )
         XCTAssertEqual(option.videoInfo.videoId, "YOUR_VIDEO_ID")
         XCTAssertEqual(option.videoInfo.videoType, VideoType.VOD)
-        XCTAssertEqual(option.videoInfo.pingUrl, "https://collector.api.video/vod")
+        XCTAssertEqual(option.videoInfo.pingUrl.absoluteString, "https://collector.api.video/vod")
     }
 
     func testValidLiveUrl() throws {
@@ -42,7 +42,7 @@ class OptionsTest: XCTestCase {
         )
         XCTAssertEqual(option.videoInfo.videoId, "YOUR_LIVE_STREAM_ID")
         XCTAssertEqual(option.videoInfo.videoType, VideoType.LIVE)
-        XCTAssertEqual(option.videoInfo.pingUrl, "https://collector.api.video/live")
+        XCTAssertEqual(option.videoInfo.pingUrl.absoluteString, "https://collector.api.video/live")
     }
 
     func testInvalidUrl() throws {
