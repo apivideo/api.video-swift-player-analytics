@@ -32,6 +32,7 @@ public struct Session: Codable {
         case sessionId = "session_id"
         case loadedAt = "loaded_at"
         case videoId = "video_id"
-        case livestreamId, referrer, metadata
+        case livestreamId = "live_stream_id"
+        case referrer, metadata
     }
 }
