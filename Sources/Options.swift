@@ -11,7 +11,7 @@ public struct Options {
     /// Callback called before sending the ping message
     public let onPing: ((PlaybackPingMessage) -> Void)?
 
-    /// Object obtion initializer
+    /// Object option initializer
     /// - Parameters:
     ///   - mediaUrl: Url of the media
     ///   - metadata: object containing metadata
@@ -21,7 +21,20 @@ public struct Options {
         mediaUrl: String, metadata: [[String: String]], onSessionIdReceived: ((String) -> Void)? = nil,
         onPing: ((PlaybackPingMessage) -> Void)? = nil
     ) throws {
-        videoInfo = try Options.parseMediaUrl(mediaUrl: mediaUrl)
+        self.init(videoInfo: try Options.parseMediaUrl(mediaUrl: mediaUrl), metadata: metadata, onSessionIdReceived: onSessionIdReceived,
+                  onPing: onPing)
+    }
+    
+    /// Object option initializer
+    /// - Parameters:
+    ///   - videoInfo: Object that contains all video informations
+    ///   - metadata: Object containing metadata
+    ///   - onSessionIdReceived: Callback called once the session id has been received
+    ///   - onPing: Callback called before sending the ping message
+    public init(videoInfo: VideoInfo, metadata: [[String: String]], onSessionIdReceived: ((String) -> Void)? = nil,
+                onPing: ((PlaybackPingMessage) -> Void)? = nil
+    ){
+        self.videoInfo = videoInfo
         self.metadata = metadata
         self.onSessionIdReceived = onSessionIdReceived
         self.onPing = onPing
@@ -41,8 +54,7 @@ public struct Options {
         let videoType = try matcher[0][1].description.toVideoType()
         let videoId = matcher[0][3]
 
-        return VideoInfo(
-            pingUrl: "https://collector.api.video/\(videoType.rawValue)", videoId: videoId,
+        return VideoInfo(videoId: videoId,
             videoType: videoType
         )
     }
