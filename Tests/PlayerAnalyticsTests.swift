@@ -35,7 +35,7 @@ final class PlayerAnalyticsTests: XCTestCase {
     func testPlaySuccess() throws {
         var isSuccess = false
         let option = try Options(
-            mediaUrl: "https://cdn.api.video/vod/vi21aJxFa0A1AFM6FPVmjnhA/hls/manifest.m3u8",
+            mediaUrl: "https://vod.api.video/vod/vi21aJxFa0A1AFM6FPVmjnhA/hls/manifest.m3u8",
             metadata: [["string 1": "String 2"], ["string 3": "String 4"]],
             onSessionIdReceived: { _ in
             }

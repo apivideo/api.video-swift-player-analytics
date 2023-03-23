@@ -197,12 +197,9 @@ public class PlayerAnalytics {
     ) {
         if eventsStack.count > 0 {
             var request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: options.videoInfo.pingUrl)
-            
-
             do {
                 let encoder = JSONEncoder()
                 let jsonPayload = try encoder.encode(payload)
-
                 let data = String(data: jsonPayload, encoding: .utf8)!.data(using: .utf8)!
                 let body = try (JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])!
                 request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
