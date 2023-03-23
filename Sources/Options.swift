@@ -17,19 +17,17 @@ public struct Options {
     ///   - metadata: object containing metadata
     ///   - onSessionIdReceived: Callback called once the session id has been received
     ///   - onPing: Callback called before sending the ping message
-   public init(
+    public init(
         mediaUrl: String, metadata: [[String: String]], onSessionIdReceived: ((String) -> Void)? = nil,
         onPing: ((PlaybackPingMessage) -> Void)? = nil
     ) throws {
-        self.videoInfo = try Options.parseMediaUrl(mediaUrl: mediaUrl)
-        self.metadata = metadata
-        self.onSessionIdReceived = onSessionIdReceived
-        self.onPing = onPing
+        self.init(videoInfo: try Options.parseMediaUrl(mediaUrl: mediaUrl), metadata: metadata, onSessionIdReceived: onSessionIdReceived,
+                  onPing: onPing)
     }
     
     /// Object option initializer
     /// - Parameters:
-    ///   - videoInfo: Object that contain all video informations
+    ///   - videoInfo: Object that contains all video informations
     ///   - metadata: Object containing metadata
     ///   - onSessionIdReceived: Callback called once the session id has been received
     ///   - onPing: Callback called before sending the ping message
