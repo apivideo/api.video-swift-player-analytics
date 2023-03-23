@@ -26,6 +26,7 @@ class ViewController: UIViewController {
     var option: Options?
     var isFistPlayed = true
     let videoLink = "https://cdn.api.video/vod/YOUR_VIDEO_ID/hls/manifest.m3u8"
+    let liveLink = "https://live.api.video/YOUR_LIVE_ID.m3u8"
     var videoUrl: URL!
 
     override func viewDidLoad() {
@@ -33,9 +34,7 @@ class ViewController: UIViewController {
         guard let url = URL(string: videoLink) else {
             return
         }
-        videoUrl = url
-        asset = AVAsset(url: videoUrl)
-        playerItem = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: requiredAssetKeys)
+        playerItem = AVPlayerItem(url: url)
         playerItem.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status), options: [.old, .new], context: &playerItemContext)
         NotificationCenter.default.addObserver(
             self, selector: #selector(playerDidFinishPlaying),
