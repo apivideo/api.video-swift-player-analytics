@@ -17,7 +17,7 @@ class OptionsTest: XCTestCase {
 
     func testValidVodUrl() throws {
         let option = try Options(
-            mediaUrl: "https://cdn.api.video/vod/vi5oDagRVJBSKHxSiPux5rYD/hls/manifest.m3u8",
+            mediaUrl: "https://vod.api.video/vod/vi5oDagRVJBSKHxSiPux5rYD/hls/manifest.m3u8",
             metadata: [[:]], onSessionIdReceived: nil, onPing: nil
         )
         XCTAssertEqual(option.videoInfo.videoId, "vi5oDagRVJBSKHxSiPux5rYD")
@@ -27,7 +27,7 @@ class OptionsTest: XCTestCase {
 
     func testValidLiveUrl() throws {
         let option = try Options(
-            mediaUrl: "https://live.api.video/li6Anin2CG1eWirOCBnvYDzI.m3u", metadata: [[:]],
+            mediaUrl: "https://live.api.video/li6Anin2CG1eWirOCBnvYDzI.m3u8", metadata: [[:]],
             onSessionIdReceived: nil, onPing: nil
         )
         XCTAssertEqual(option.videoInfo.videoId, "li6Anin2CG1eWirOCBnvYDzI")

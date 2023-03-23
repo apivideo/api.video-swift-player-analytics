@@ -13,7 +13,6 @@ class ViewController: UIViewController {
 
     let videoPlayerView = UIView()
     var player: AVPlayer!
-    var asset: AVAsset!
     var playerItem: AVPlayerItem!
     var fromCMTime: CMTime!
     private var playerItemContext = 0
@@ -21,7 +20,7 @@ class ViewController: UIViewController {
     var playerAnalytics: PlayerAnalytics?
     var option: Options?
     var isFistPlayed = true
-    let videoLink = "https://cdn.api.video/vod/YOUR_VIDEO_ID/hls/manifest.m3u8"
+    let videoLink = "https://vod.api.video/vod/YOUR_VIDEO_ID/hls/manifest.m3u8"
     let liveLink = "https://live.api.video/YOUR_LIVE_ID.m3u8"
     var videoUrl: URL!
 
