@@ -24,7 +24,7 @@ public struct Options {
         self.init(videoInfo: try Options.parseMediaUrl(mediaUrl: mediaUrl), metadata: metadata, onSessionIdReceived: onSessionIdReceived,
                   onPing: onPing)
     }
-    
+
     /// Object option initializer
     /// - Parameters:
     ///   - videoInfo: Object that contains all video informations
@@ -32,8 +32,8 @@ public struct Options {
     ///   - onSessionIdReceived: Callback called once the session id has been received
     ///   - onPing: Callback called before sending the ping message
     public init(videoInfo: VideoInfo, metadata: [[String: String]], onSessionIdReceived: ((String) -> Void)? = nil,
-                onPing: ((PlaybackPingMessage) -> Void)? = nil
-    ){
+                onPing: ((PlaybackPingMessage) -> Void)? = nil)
+    {
         self.videoInfo = videoInfo
         self.metadata = metadata
         self.onSessionIdReceived = onSessionIdReceived
@@ -54,8 +54,6 @@ public struct Options {
         let videoType = try matcher[0][1].description.toVideoType()
         let videoId = matcher[0][3]
 
-        return VideoInfo(videoId: videoId,
-            videoType: videoType
-        )
+        return try VideoInfo(videoId: videoId, videoType: videoType)
     }
 }

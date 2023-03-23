@@ -3,10 +3,14 @@ import Foundation
 public struct VideoInfo {
     public let videoId: String
     public let videoType: VideoType
-    public let pingUrl: String
-    public init(videoId: String, videoType: VideoType) {
+    public let pingUrl: URL
+
+    public init(videoId: String, videoType: VideoType) throws {
         self.videoId = videoId
         self.videoType = videoType
-        self.pingUrl = "https://collector.api.video/\(videoType.rawValue)"
+        guard let pingUrl = URL(string: "https://collector.api.video/\(videoType.rawValue)") else {
+            throw UrlError.malformedUrl("Can not create media url")
+        }
+        self.pingUrl = pingUrl
     }
 }

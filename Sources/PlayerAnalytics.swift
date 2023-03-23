@@ -1,5 +1,6 @@
 import Foundation
 import AVFoundation
+
 @available(iOS 11.0, *)
 public class PlayerAnalytics {
     private var options: Options
@@ -124,7 +125,7 @@ public class PlayerAnalytics {
             completion(.success(()))
         }
     }
-    
+
     /// Method to call when a seek event occurs.
     /// - Parameters:
     ///   - from: Start time in second.
@@ -196,41 +197,16 @@ public class PlayerAnalytics {
         payload: PlaybackPingMessage, completion: @escaping (Result<Void, Error>) -> Void
     ) {
         if eventsStack.count > 0 {
-            var request = RequestsBuilder().postClientUrlRequestBuilder(apiPath: options.videoInfo.pingUrl)
-            do {
-                let encoder = JSONEncoder()
-                let jsonPayload = try encoder.encode(payload)
-                let data = String(data: jsonPayload, encoding: .utf8)!.data(using: .utf8)!
-                let body = try (JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])!
-                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-            } catch {
-                completion(.failure(error))
-            }
-
-            let session = RequestsBuilder().buildUrlSession()
-            TasksExecutor.execute(session: session, request: request) { data, error in
-                if let data = data {
-                    do {
-                        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: AnyObject] else {
-                            completion(.failure(JSONError.castError("Could not cast json to [String: AnyObject]")))
-                            return
-                        }
-                        guard let mySession = json["session"] as? String else {
-                            completion(.failure(JSONError.castError("Could not cast session Id from JSON")))
-                            return
-                        }
-                        if self.sessionId == nil {
-                            self.sessionId = mySession
-                        }
-                        self.cleanEventsStack()
-                        completion(.success(()))
-                    } catch {
-                        completion(.failure(error))
+            RequestsBuilder.sendPing(taskExecutor: TasksExecutor.self, url: options.videoInfo.pingUrl, payload: payload) { res in
+                switch res {
+                case .success(let sessionId):
+                    if self.sessionId == nil {
+                        self.sessionId = sessionId
                     }
-                } else if let error = error {
+                    self.cleanEventsStack()
+                    completion(.success(()))
+                case let .failure(error):
                     completion(.failure(error))
-                } else {
-                    print("Unknown error")
                 }
             }
         }
@@ -258,7 +234,7 @@ public extension String {
         return (try? NSRegularExpression(pattern: regex, options: []))?.matches(
             in: self, options: [], range: NSMakeRange(0, nsString.length)
         ).map { match in
-            (0 ..< match.numberOfRanges).map {
+            (0..<match.numberOfRanges).map {
                 match.range(at: $0).location == NSNotFound
                     ? "" : nsString.substring(with: match.range(at: $0))
             }
