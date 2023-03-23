@@ -44,7 +44,7 @@ In the Project Navigator select your own project. Then select the project in the
 Or add this in your Package.swift
 ```
   dependencies: [
-        .package(url: "https://github.com/apivideo/api.video-ios-player-analytics.git", from: "1.0.4"),
+        .package(url: "https://github.com/apivideo/api.video-ios-player-analytics.git", from: "1.0.5"),
     ],
 ```
 ### Cocoapods
