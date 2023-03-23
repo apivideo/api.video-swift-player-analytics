@@ -1,5 +1,8 @@
 # Changelog
 All changes to this project will be documented in this file.
+## [1.0.5] - 2023-03-23
+- Add init method that handle VideoInfo
+- VideoInfo build the pingUrl
 ## [1.0.4] - 2022-08-03
 - Add Seek method with CMTime params
 
