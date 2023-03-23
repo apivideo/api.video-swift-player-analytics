@@ -17,10 +17,6 @@ class ViewController: UIViewController {
     var playerItem: AVPlayerItem!
     var fromCMTime: CMTime!
     private var playerItemContext = 0
-    let requiredAssetKeys = [
-        "playable",
-        "hasProtectedContent"
-    ]
     var timeObserver: Any?
     var playerAnalytics: PlayerAnalytics?
     var option: Options?
