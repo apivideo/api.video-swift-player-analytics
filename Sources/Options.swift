@@ -41,7 +41,7 @@ public struct Options {
     }
 
     private static func parseMediaUrl(mediaUrl: String) throws -> VideoInfo {
-        let regex = "https:/.*[/](?<type>vod|live).*/(?<id>(vi|li)[^/^.]*)[/.]."
+        let regex = "https:/.*[/](?<type>vod|live).*/(?<id>(vi|li)[^/^.]*)[/.].*"
 
         let matcher = mediaUrl.match(regex)
         if matcher.isEmpty {
@@ -52,7 +52,7 @@ public struct Options {
         }
 
         let videoType = try matcher[0][1].description.toVideoType()
-        let videoId = matcher[0][3]
+        let videoId = matcher[0][2]
 
         return try VideoInfo(videoId: videoId, videoType: videoType)
     }
