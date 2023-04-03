@@ -17,30 +17,30 @@ class OptionsTest: XCTestCase {
 
     func testValidVodFormerUrl() throws {
         let option = try Options(
-            mediaUrl: "https://cdn.api.video/vod/YOUR_VIDEO_ID/hls/manifest.m3u8",
+            mediaUrl: "https://cdn.api.video/vod/vi5oNqxkifcXkT4auGNsvgZB/hls/manifest.m3u8",
             metadata: [[:]], onSessionIdReceived: nil, onPing: nil
         )
-        XCTAssertEqual(option.videoInfo.videoId, "YOUR_VIDEO_ID")
+        XCTAssertEqual(option.videoInfo.videoId, "vi5oNqxkifcXkT4auGNsvgZB")
         XCTAssertEqual(option.videoInfo.videoType, VideoType.VOD)
         XCTAssertEqual(option.videoInfo.pingUrl.absoluteString, "https://collector.api.video/vod")
     }
 
     func testValidVodUrl() throws {
         let option = try Options(
-            mediaUrl: "https://vod.api.video/vod/YOUR_VIDEO_ID/hls/manifest.m3u8",
+            mediaUrl: "https://vod.api.video/vod/vi5oNqxkifcXkT4auGNsvgZB/hls/manifest.m3u8",
             metadata: [[:]], onSessionIdReceived: nil, onPing: nil
         )
-        XCTAssertEqual(option.videoInfo.videoId, "YOUR_VIDEO_ID")
+        XCTAssertEqual(option.videoInfo.videoId, "vi5oNqxkifcXkT4auGNsvgZB")
         XCTAssertEqual(option.videoInfo.videoType, VideoType.VOD)
         XCTAssertEqual(option.videoInfo.pingUrl.absoluteString, "https://collector.api.video/vod")
     }
 
     func testValidLiveUrl() throws {
         let option = try Options(
-            mediaUrl: "https://live.api.video/YOUR_LIVE_STREAM_ID.m3u8", metadata: [[:]],
+            mediaUrl: "https://live.api.video/li77ACbZjzEJgmr8d0tm4xFt.m3u8", metadata: [[:]],
             onSessionIdReceived: nil, onPing: nil
         )
-        XCTAssertEqual(option.videoInfo.videoId, "YOUR_LIVE_STREAM_ID")
+        XCTAssertEqual(option.videoInfo.videoId, "li77ACbZjzEJgmr8d0tm4xFt")
         XCTAssertEqual(option.videoInfo.videoType, VideoType.LIVE)
         XCTAssertEqual(option.videoInfo.pingUrl.absoluteString, "https://collector.api.video/live")
     }
