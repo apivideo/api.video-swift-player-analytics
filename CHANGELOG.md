@@ -2,7 +2,7 @@
 All changes to this project will be documented in this file.
 
 ## [1.0.6] - 2023-31-03
-- Add Seek method with CMTime params
+- Fix regex to handle private live stream
 
 ## [1.0.5] - 2023-03-23
 - Add init method that handle VideoInfo
