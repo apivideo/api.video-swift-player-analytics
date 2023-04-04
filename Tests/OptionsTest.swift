@@ -44,6 +44,16 @@ class OptionsTest: XCTestCase {
         XCTAssertEqual(option.videoInfo.videoType, VideoType.LIVE)
         XCTAssertEqual(option.videoInfo.pingUrl.absoluteString, "https://collector.api.video/live")
     }
+    
+    func testValidPrivateLiveUrl() throws {
+        let option = try Options(
+            mediaUrl: "https://live.api.video/PRIVATE_TOKEN/li77ACbZjzEJgmr8d0tm4xFt.m3u8", metadata: [[:]],
+            onSessionIdReceived: nil, onPing: nil
+        )
+        XCTAssertEqual(option.videoInfo.videoId, "li77ACbZjzEJgmr8d0tm4xFt")
+        XCTAssertEqual(option.videoInfo.videoType, VideoType.LIVE)
+        XCTAssertEqual(option.videoInfo.pingUrl.absoluteString, "https://collector.api.video/live")
+    }
 
     func testInvalidUrl() throws {
         XCTAssertThrowsError(
