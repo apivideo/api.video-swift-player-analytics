@@ -41,18 +41,27 @@ public struct Options {
     }
 
     private static func parseMediaUrl(mediaUrl: String) throws -> VideoInfo {
-        let regex = "https:/.*[/](?<type>vod|live).*/(?<id>(vi|li)[^/^.]*)[/.].*"
+        let pattern = "https:/.*[/](?<type>vod|live).*/(?<id>(vi|li)[^/^.]*)[/.].*"
+        let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+        
+        var videoType: VideoType!
+        var videoId: String!
+        
+        if let match = regex?.firstMatch(in: mediaUrl, range: NSRange(location: 0, length: mediaUrl.utf16.count)) {
+            if let videoTypeRange = Range(match.range(withName: "type"), in: mediaUrl) {
+                videoType = try mediaUrl[videoTypeRange].description.toVideoType()
+            }else{
+                throw UrlError.malformedUrl("Can not parse media url")
+            }
 
-        let matcher = mediaUrl.match(regex)
-        if matcher.isEmpty {
-            throw UrlError.malformedUrl("Can not parse media url")
-        }
-        if matcher[0].count < 3 {
+            if let videoIdRange = Range(match.range(withName: "id"), in: mediaUrl) {
+                videoId = String(mediaUrl[videoIdRange])
+            }else{
+                throw UrlError.malformedUrl("Can not parse media url")
+            }
+        }else{
             throw UrlError.malformedUrl("Missing arguments in url")
         }
-
-        let videoType = try matcher[0][1].description.toVideoType()
-        let videoId = matcher[0][2]
 
         return try VideoInfo(videoId: videoId, videoType: videoType)
     }
