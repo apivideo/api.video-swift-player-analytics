@@ -25,7 +25,10 @@ extension URLSession {
 
     typealias DataTaskResult = Result<(HTTPURLResponse, Data), Error>
 
-    func dataTask(with request: URLRequest, completionHandler: @escaping (DataTaskResult) -> Void) -> URLSessionDataTask {
+    func dataTask(
+        with request: URLRequest,
+        completionHandler: @escaping (DataTaskResult) -> Void
+    ) -> URLSessionDataTask {
         return dataTask(with: request) { data, response, error in
             if let error = error {
                 completionHandler(Result.failure(HTTPError.transportError(error)))

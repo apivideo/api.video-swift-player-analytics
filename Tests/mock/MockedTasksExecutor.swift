@@ -8,8 +8,8 @@ class MockedTasksExecutor: TasksExecutorProtocol {
         guard
             let url = Bundle(for: MockedTasksExecutor.self).url(
                 forResource: "uploadSuccess", withExtension: "json"
-            )
-        else {
+            ) else
+        {
             completion(nil, nil)
             return
         }
