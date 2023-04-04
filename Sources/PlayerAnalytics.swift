@@ -1,10 +1,10 @@
-import Foundation
 import AVFoundation
+import Foundation
 
 @available(iOS 11.0, *)
 public class PlayerAnalytics {
     private var options: Options
-    private static let playbackDelay = 10 * 1000
+    private static let playbackDelay = 10 * 1_000
     private var timer: Timer?
     private var eventsStack = [PingEvent]()
     private let loadedAt = Date().preciseLocalTime
@@ -15,7 +15,8 @@ public class PlayerAnalytics {
         }
     }
 
-    /// Field to call each time the playback time changes (it should be called often, the accuracy of the collected data depends on it).
+    /// Field to call each time the playback time changes (it should be called often, the accuracy of the collected data
+    /// depends on it).
     var currentTime: Float = 0
 
     public init(options: Options) {
@@ -121,7 +122,8 @@ public class PlayerAnalytics {
                 event = .SEEK_BACKWARD
             }
             eventsStack.append(
-                PingEvent(emittedAt: Date().preciseLocalTime, type: event, at: nil, from: from, to: to))
+                PingEvent(emittedAt: Date().preciseLocalTime, type: event, at: nil, from: from, to: to)
+            )
             completion(.success(()))
         }
     }
@@ -144,7 +146,8 @@ public class PlayerAnalytics {
 
     private func addEventAt(_ eventName: Event, completion: @escaping (Result<Void, Error>) -> Void) {
         eventsStack.append(
-            PingEvent(emittedAt: loadedAt, type: eventName, at: currentTime, from: nil, to: nil))
+            PingEvent(emittedAt: loadedAt, type: eventName, at: currentTime, from: nil, to: nil)
+        )
         completion(.success(()))
     }
 
@@ -158,7 +161,8 @@ public class PlayerAnalytics {
         )
     }
 
-    @objc private func timerAction() {
+    @objc
+    private func timerAction() {
         sendPing(payload: buildPingPayload()) { result in
             switch result {
             case .success: break
@@ -196,10 +200,14 @@ public class PlayerAnalytics {
     private func sendPing(
         payload: PlaybackPingMessage, completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        if eventsStack.count > 0 {
-            RequestsBuilder.sendPing(taskExecutor: TasksExecutor.self, url: options.videoInfo.pingUrl, payload: payload) { res in
+        if !eventsStack.isEmpty {
+            RequestsBuilder.sendPing(
+                taskExecutor: TasksExecutor.self,
+                url: options.videoInfo.pingUrl,
+                payload: payload
+            ) { res in
                 switch res {
-                case .success(let sessionId):
+                case let .success(sessionId):
                     if self.sessionId == nil {
                         self.sessionId = sessionId
                     }
@@ -234,7 +242,7 @@ public extension String {
         return (try? NSRegularExpression(pattern: regex, options: []))?.matches(
             in: self, options: [], range: NSMakeRange(0, nsString.length)
         ).map { match in
-            (0..<match.numberOfRanges).map {
+            (0 ..< match.numberOfRanges).map {
                 match.range(at: $0).location == NSNotFound
                     ? "" : nsString.substring(with: match.range(at: $0))
             }

@@ -30,16 +30,25 @@ class ViewController: UIViewController {
             return
         }
         playerItem = AVPlayerItem(url: url)
-        playerItem.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status), options: [.old, .new], context: &playerItemContext)
+        playerItem.addObserver(
+            self,
+            forKeyPath: #keyPath(AVPlayerItem.status),
+            options: [.old, .new],
+            context: &playerItemContext
+        )
         NotificationCenter.default.addObserver(
             self, selector: #selector(playerDidFinishPlaying),
             name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.currentItem
         )
 
         do {
-            option = try Options(mediaUrl: videoLink, metadata: [["string 1": "String 2"], ["string 3": "String 4"]], onSessionIdReceived: { id in
-                print("sessionid : \(id)")
-            })
+            option = try Options(
+                mediaUrl: videoLink,
+                metadata: [["string 1": "String 2"], ["string 3": "String 4"]],
+                onSessionIdReceived: { id in
+                    print("sessionid : \(id)")
+                }
+            )
         } catch {
             print("error with the url")
         }
@@ -51,10 +60,42 @@ class ViewController: UIViewController {
 
         videoPlayerView.backgroundColor = UIColor.black
         videoPlayerView.translatesAutoresizingMaskIntoConstraints = false
-        let topConstraint = NSLayoutConstraint(item: videoPlayerView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: 0)
-        let bottomConstraint = NSLayoutConstraint(item: videoPlayerView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0)
-        let leadingConstraint = NSLayoutConstraint(item: videoPlayerView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1, constant: 0)
-        let trailingConstraint = NSLayoutConstraint(item: videoPlayerView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1, constant: 0)
+        let topConstraint = NSLayoutConstraint(
+            item: videoPlayerView,
+            attribute: .top,
+            relatedBy: .equal,
+            toItem: view,
+            attribute: .top,
+            multiplier: 1,
+            constant: 0
+        )
+        let bottomConstraint = NSLayoutConstraint(
+            item: videoPlayerView,
+            attribute: .bottom,
+            relatedBy: .equal,
+            toItem: view,
+            attribute: .bottom,
+            multiplier: 1,
+            constant: 0
+        )
+        let leadingConstraint = NSLayoutConstraint(
+            item: videoPlayerView,
+            attribute: .leading,
+            relatedBy: .equal,
+            toItem: view,
+            attribute: .leading,
+            multiplier: 1,
+            constant: 0
+        )
+        let trailingConstraint = NSLayoutConstraint(
+            item: videoPlayerView,
+            attribute: .trailing,
+            relatedBy: .equal,
+            toItem: view,
+            attribute: .trailing,
+            multiplier: 1,
+            constant: 0
+        )
 
         view.addSubview(videoPlayerView)
         view.addConstraints([topConstraint, bottomConstraint, leadingConstraint, trailingConstraint])
@@ -113,14 +154,17 @@ class ViewController: UIViewController {
             timeformatter.minimumIntegerDigits = 2
             timeformatter.minimumFractionDigits = 0
             timeformatter.roundingMode = .down
-            guard let minsStr = timeformatter.string(from: NSNumber(value: mins)), let secsStr = timeformatter.string(from: NSNumber(value: secs)) else {
+            guard let minsStr = timeformatter.string(from: NSNumber(value: mins)),
+                  let secsStr = timeformatter.string(from: NSNumber(value: secs)) else
+            {
                 return
             }
             timeRemainingLabel.text = "\(minsStr):\(secsStr)"
         }
     }
 
-    @IBAction func playPauseSelected(_: Any) {
+    @IBAction
+    func playPauseSelected(_: Any) {
         guard let player = player else { return }
         if !player.isPlaying {
             player.play()
@@ -159,7 +203,8 @@ class ViewController: UIViewController {
         }
     }
 
-    @objc func onSliderValChanged(slider: UISlider, event: UIEvent) {
+    @objc
+    func onSliderValChanged(slider: UISlider, event: UIEvent) {
         guard let duration = player?.currentItem?.duration else { return }
         player.pause()
 
@@ -167,7 +212,10 @@ class ViewController: UIViewController {
             switch touchEvent.phase {
             case .began:
                 // handle drag began
-                fromCMTime = CMTime(value: CMTimeValue(Float64(slider.value) * CMTimeGetSeconds(duration)), timescale: 1)
+                fromCMTime = CMTime(
+                    value: CMTimeValue(Float64(slider.value) * CMTimeGetSeconds(duration)),
+                    timescale: 1
+                )
             case .moved:
                 // handle drag moved
                 break
@@ -192,7 +240,8 @@ class ViewController: UIViewController {
         }
     }
 
-    @IBAction func goForward(_: Any) {
+    @IBAction
+    func goForward(_: Any) {
         guard let currentTime = player?.currentTime() else { return }
         let currentTimeInSecondsPlus15 = CMTimeGetSeconds(currentTime).advanced(by: 15)
         let seekTime = CMTime(value: CMTimeValue(currentTimeInSecondsPlus15), timescale: 1)
@@ -207,7 +256,8 @@ class ViewController: UIViewController {
         }
     }
 
-    @IBAction func goBackward(_: Any) {
+    @IBAction
+    func goBackward(_: Any) {
         guard let currentTime = player?.currentTime() else { return }
         let currentTimeInSecondsMinus15 = CMTimeGetSeconds(currentTime).advanced(by: -15)
         let seekTime = CMTime(value: CMTimeValue(currentTimeInSecondsMinus15), timescale: 1)
@@ -222,7 +272,8 @@ class ViewController: UIViewController {
         }
     }
 
-    @objc func playerDidFinishPlaying(note _: NSNotification) {
+    @objc
+    func playerDidFinishPlaying(note _: NSNotification) {
         playerAnalytics?.end { result in
             switch result {
             case .success:
@@ -241,17 +292,20 @@ class ViewController: UIViewController {
         }
     }
 
-    override func observeValue(forKeyPath keyPath: String?,
-                               of object: Any?,
-                               change: [NSKeyValueChangeKey: Any]?,
-                               context: UnsafeMutableRawPointer?)
-    {
+    override func observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [NSKeyValueChangeKey: Any]?,
+        context: UnsafeMutableRawPointer?
+    ) {
         // Only handle observations for the playerItemContext
         guard context == &playerItemContext else {
-            super.observeValue(forKeyPath: keyPath,
-                               of: object,
-                               change: change,
-                               context: context)
+            super.observeValue(
+                forKeyPath: keyPath,
+                of: object,
+                change: change,
+                context: context
+            )
             return
         }
 

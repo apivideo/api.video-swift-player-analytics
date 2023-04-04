@@ -21,8 +21,12 @@ public struct Options {
         mediaUrl: String, metadata: [[String: String]], onSessionIdReceived: ((String) -> Void)? = nil,
         onPing: ((PlaybackPingMessage) -> Void)? = nil
     ) throws {
-        self.init(videoInfo: try Options.parseMediaUrl(mediaUrl: mediaUrl), metadata: metadata, onSessionIdReceived: onSessionIdReceived,
-                  onPing: onPing)
+        self.init(
+            videoInfo: try Options.parseMediaUrl(mediaUrl: mediaUrl),
+            metadata: metadata,
+            onSessionIdReceived: onSessionIdReceived,
+            onPing: onPing
+        )
     }
 
     /// Object option initializer
@@ -31,9 +35,12 @@ public struct Options {
     ///   - metadata: Object containing metadata
     ///   - onSessionIdReceived: Callback called once the session id has been received
     ///   - onPing: Callback called before sending the ping message
-    public init(videoInfo: VideoInfo, metadata: [[String: String]], onSessionIdReceived: ((String) -> Void)? = nil,
-                onPing: ((PlaybackPingMessage) -> Void)? = nil)
-    {
+    public init(
+        videoInfo: VideoInfo,
+        metadata: [[String: String]],
+        onSessionIdReceived: ((String) -> Void)? = nil,
+        onPing: ((PlaybackPingMessage) -> Void)? = nil
+    ) {
         self.videoInfo = videoInfo
         self.metadata = metadata
         self.onSessionIdReceived = onSessionIdReceived
@@ -41,18 +48,27 @@ public struct Options {
     }
 
     private static func parseMediaUrl(mediaUrl: String) throws -> VideoInfo {
-        let regex = "https:/.*[/](?<type>vod|live).*/(?<id>(vi|li)[^/^.]*)[/.].*"
+        let pattern = "https:/.*[/](?<type>vod|live).*/(?<id>(vi|li)[^/^.]*)[/.].*"
+        let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive)
 
-        let matcher = mediaUrl.match(regex)
-        if matcher.isEmpty {
+        let videoType: VideoType!
+        let videoId: String!
+
+        guard let match = regex?.firstMatch(in: mediaUrl, range: NSRange(location: 0, length: mediaUrl.utf16.count)) else {
             throw UrlError.malformedUrl("Can not parse media url")
         }
-        if matcher[0].count < 3 {
-            throw UrlError.malformedUrl("Missing arguments in url")
+
+        if let videoTypeRange = Range(match.range(withName: "type"), in: mediaUrl) {
+            videoType = try String(mediaUrl[videoTypeRange]).toVideoType()
+        } else {
+            throw UrlError.malformedUrl("Can not get video type from URL")
         }
 
-        let videoType = try matcher[0][1].description.toVideoType()
-        let videoId = matcher[0][2]
+        if let videoIdRange = Range(match.range(withName: "id"), in: mediaUrl) {
+            videoId = String(mediaUrl[videoIdRange])
+        } else {
+            throw UrlError.malformedUrl("Can not get video id from URL")
+        }
 
         return try VideoInfo(videoId: videoId, videoType: videoType)
     }
