@@ -1,20 +1,8 @@
-//
-//  Options.swift
-//
-
 import XCTest
 
 @testable import ApiVideoPlayerAnalytics
 
 class OptionsTest: XCTestCase {
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     func testValidVodFormerUrl() throws {
         let option = try Options(
             mediaUrl: "https://cdn.api.video/vod/vi5oNqxkifcXkT4auGNsvgZB/hls/manifest.m3u8",
@@ -28,6 +16,15 @@ class OptionsTest: XCTestCase {
     func testValidVodUrl() throws {
         let option = try Options(
             mediaUrl: "https://vod.api.video/vod/vi5oNqxkifcXkT4auGNsvgZB/hls/manifest.m3u8",
+            metadata: [[:]], onSessionIdReceived: nil, onPing: nil
+        )
+        XCTAssertEqual(option.videoInfo.videoId, "vi5oNqxkifcXkT4auGNsvgZB")
+        XCTAssertEqual(option.videoInfo.videoType, VideoType.VOD)
+        XCTAssertEqual(option.videoInfo.pingUrl.absoluteString, "https://collector.api.video/vod")
+    }
+    func testValidPrivateVodUrl() throws {
+        let option = try Options(
+            mediaUrl: "https://vod.api.video/vod/vi5oNqxkifcXkT4auGNsvgZB/token/PRIVATE_TOKEN/hls/manifest.m3u8",
             metadata: [[:]], onSessionIdReceived: nil, onPing: nil
         )
         XCTAssertEqual(option.videoInfo.videoId, "vi5oNqxkifcXkT4auGNsvgZB")
