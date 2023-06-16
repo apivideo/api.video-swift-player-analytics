@@ -236,18 +236,6 @@ public extension String {
             throw UrlError.invalidParameter("Can't determine if video is vod or live: \(self)")
         }
     }
-
-    func match(_ regex: String) -> [[String]] {
-        let nsString = self as NSString
-        return (try? NSRegularExpression(pattern: regex, options: []))?.matches(
-            in: self, options: [], range: NSMakeRange(0, nsString.length)
-        ).map { match in
-            (0 ..< match.numberOfRanges).map {
-                match.range(at: $0).location == NSNotFound
-                    ? "" : nsString.substring(with: match.range(at: $0))
-            }
-        } ?? []
-    }
 }
 
 @available(iOS 11.0, *)
