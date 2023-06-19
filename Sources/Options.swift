@@ -5,7 +5,7 @@ public struct Options {
     /// Information containing analytics collector url, video type (vod or live) and video id
     public var videoInfo: VideoInfo
     /// object containing metadata
-    public var metadata = [[String: String]]()
+    public var metadata: [String: String]
     /// Callback called once the session id has been received
     public let onSessionIdReceived: ((String) -> Void)?
     /// Callback called before sending the ping message
@@ -19,7 +19,7 @@ public struct Options {
     ///   - onPing: Callback called before sending the ping message
     public init(
         mediaUrl: String,
-        metadata: [[String: String]],
+        metadata: [String: String] = [:],
         onSessionIdReceived: ((String) -> Void)? = nil,
         onPing: ((PlaybackPingMessage) -> Void)? = nil
     ) throws {
@@ -39,7 +39,7 @@ public struct Options {
     ///   - onPing: Callback called before sending the ping message
     public init(
         videoInfo: VideoInfo,
-        metadata: [[String: String]],
+        metadata: [String: String] = [:],
         onSessionIdReceived: ((String) -> Void)? = nil,
         onPing: ((PlaybackPingMessage) -> Void)? = nil
     ) {
