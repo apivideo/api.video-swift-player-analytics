@@ -4,7 +4,7 @@ public struct Session: Codable {
     let sessionId: String?
     let loadedAt: String
     let videoId: String?
-    let livestreamId: String?
+    let liveStreamId: String?
     let referrer: String
     let metadata: [Metadata]
 
@@ -13,7 +13,7 @@ public struct Session: Codable {
         metadata: [String: String]
     ) -> Session {
         return Session(
-            sessionId: sessionId, loadedAt: loadedAt, videoId: nil, livestreamId: livestreamId,
+            sessionId: sessionId, loadedAt: loadedAt, videoId: nil, liveStreamId: livestreamId,
             referrer: referrer, metadata: metadata.toMetadata()
         )
     }
@@ -23,17 +23,9 @@ public struct Session: Codable {
         metadata: [String: String]
     ) -> Session {
         return Session(
-            sessionId: sessionId, loadedAt: loadedAt, videoId: videoId, livestreamId: nil,
+            sessionId: sessionId, loadedAt: loadedAt, videoId: videoId, liveStreamId: nil,
             referrer: referrer, metadata: metadata.toMetadata()
         )
-    }
-
-    private enum CodingKeys: String, CodingKey {
-        case sessionId = "session_id"
-        case loadedAt = "loaded_at"
-        case videoId = "video_id"
-        case livestreamId = "live_stream_id"
-        case referrer, metadata
     }
 }
 

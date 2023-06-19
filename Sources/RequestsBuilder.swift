@@ -26,7 +26,9 @@ public enum RequestsBuilder {
         let session = buildUrlSession()
 
         do {
-            request.httpBody = try JSONEncoder().encode(payload)
+            let encoder = JSONEncoder()
+            encoder.keyEncodingStrategy = .convertToSnakeCase
+            request.httpBody = try encoder.encode(payload)
         } catch {
             completion(.failure(error))
         }
