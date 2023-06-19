@@ -26,11 +26,7 @@ public enum RequestsBuilder {
         let session = buildUrlSession()
 
         do {
-            let encoder = JSONEncoder()
-            let jsonPayload = try encoder.encode(payload)
-            let data = String(data: jsonPayload, encoding: .utf8)!.data(using: .utf8)!
-            let body = try (JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])!
-            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            request.httpBody = try JSONEncoder().encode(payload)
         } catch {
             completion(.failure(error))
         }
