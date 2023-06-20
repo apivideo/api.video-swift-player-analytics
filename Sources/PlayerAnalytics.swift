@@ -202,7 +202,7 @@ public class PlayerAnalytics {
     ) {
         if !eventsStack.isEmpty {
             RequestsBuilder.sendPing(
-                taskExecutor: TasksExecutor.self,
+                taskExecutor: DefaultTasksExecutor.self,
                 url: options.videoInfo.pingUrl,
                 payload: payload
             ) { res in

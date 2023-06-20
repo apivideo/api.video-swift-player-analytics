@@ -33,8 +33,9 @@ public enum RequestsBuilder {
             completion(.failure(error))
         }
 
-        taskExecutor.execute(session: session, request: request) { data, error in
-            if let data = data {
+        taskExecutor.execute(session: session, request: request) { result in
+            switch result {
+            case let .success(data):
                 do {
                     guard let json = try JSONSerialization.jsonObject(with: data) as? [String: AnyObject] else {
                         completion(.failure(JSONError.castError("Could not cast json to [String: AnyObject]")))
@@ -48,12 +49,8 @@ public enum RequestsBuilder {
                 } catch {
                     completion(.failure(error))
                 }
-            } else {
-                if let error = error {
-                    completion(.failure(error))
-                } else {
-                    fatalError("No data nor error")
-                }
+            case let .failure(error):
+                completion(.failure(error))
             }
         }
     }

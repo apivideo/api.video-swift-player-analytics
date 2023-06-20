@@ -1,16 +1,15 @@
 import Foundation
 
-public class TasksExecutor: TasksExecutorProtocol {
-    private let decoder = JSONDecoder()
+public class DefaultTasksExecutor: TasksExecutorProtocol {
     public static func execute(
-        session: URLSession, request: URLRequest, completion: @escaping (Data?, Error?) -> Void
+        session: URLSession, request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void
     ) {
         let task = session.dataTask(with: request) { result in
             switch result {
             case let .success((_, data)):
-                completion(data, nil)
+                completion(.success(data))
             case let .failure(error):
-                completion(nil, error)
+                completion(.failure(error))
             }
         }
         task.resume()
