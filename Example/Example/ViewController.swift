@@ -44,7 +44,7 @@ class ViewController: UIViewController {
         do {
             option = try Options(
                 mediaUrl: videoLink,
-                metadata: [["string 1": "String 2"], ["string 3": "String 4"]],
+                metadata: ["string 1": "String 2", "string 3": "String 4"],
                 onSessionIdReceived: { id in
                     print("sessionid : \(id)")
                 }

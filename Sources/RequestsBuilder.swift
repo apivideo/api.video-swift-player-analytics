@@ -27,10 +27,8 @@ public enum RequestsBuilder {
 
         do {
             let encoder = JSONEncoder()
-            let jsonPayload = try encoder.encode(payload)
-            let data = String(data: jsonPayload, encoding: .utf8)!.data(using: .utf8)!
-            let body = try (JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])!
-            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            encoder.keyEncodingStrategy = .convertToSnakeCase
+            request.httpBody = try encoder.encode(payload)
         } catch {
             completion(.failure(error))
         }

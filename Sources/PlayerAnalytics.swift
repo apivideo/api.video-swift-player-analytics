@@ -25,7 +25,7 @@ public class PlayerAnalytics {
 
     /// Method to call when the video starts playing for the first time.
     /// (in the case of a resume after paused, use resume()).
-    /// - Parameter completion: Invoked when Result is succesful or failed.
+    /// - Parameter completion: Invoked when Result is successful or failed.
     ///
     /// example of usage
     ///
@@ -51,7 +51,7 @@ public class PlayerAnalytics {
     }
 
     /// Method to call when the video playback is resumed after a pause.
-    /// - Parameter completion: Invoked when Result is succesful or failed.
+    /// - Parameter completion: Invoked when Result is successful or failed.
     public func resume(completion: @escaping (Result<Void, Error>) -> Void) {
         if timer == nil {
             schedule()
@@ -62,7 +62,7 @@ public class PlayerAnalytics {
     }
 
     /// Method to call once the player is ready to play the media.
-    /// - Parameter completion: Invoked when Result is succesful or failed.
+    /// - Parameter completion: Invoked when Result is successful or failed.
     public func ready(completion: @escaping (Result<Void, Error>) -> Void) {
         addEventAt(Event.READY) { result in
             switch result {
@@ -77,7 +77,7 @@ public class PlayerAnalytics {
     }
 
     /// Method to call when the video is ended.
-    /// - Parameter completion: Invoked when Result is succesful or failed.
+    /// - Parameter completion: Invoked when Result is successful or failed.
     public func end(completion: @escaping (Result<Void, Error>) -> Void) {
         unSchedule()
         addEventAt(Event.END) { result in
@@ -93,7 +93,7 @@ public class PlayerAnalytics {
     }
 
     /// Method to call when the video is paused.
-    /// - Parameter completion: Invoked when Result is succesful or failed.
+    /// - Parameter completion: Invoked when Result is successful or failed.
     public func pause(completion: @escaping (Result<Void, Error>) -> Void) {
         unSchedule()
         addEventAt(Event.PAUSE) { result in
@@ -112,7 +112,7 @@ public class PlayerAnalytics {
     /// - Parameters:
     ///   - from: Start time in second.
     ///   - to: End time in second.
-    ///   - completion: Invoked when Result is succesful or failed.
+    ///   - completion: Invoked when Result is successful or failed.
     public func seek(from: Float, to: Float, completion: @escaping (Result<Void, Error>) -> Void) {
         if from > 0, to > 0 {
             var event: Event
@@ -132,13 +132,13 @@ public class PlayerAnalytics {
     /// - Parameters:
     ///   - from: Start time in second.
     ///   - to: End time in second.
-    ///   - completion: Invoked when Result is succesful or failed.
+    ///   - completion: Invoked when Result is successful or failed.
     public func seek(from: CMTime, to: CMTime, completion: @escaping (Result<Void, Error>) -> Void) {
         seek(from: Float(from.seconds), to: Float(to.seconds), completion: completion)
     }
 
     /// Method to call when the video player is disposed.
-    /// - Parameter completion: Invoked when Result is succesful or failed.
+    /// - Parameter completion: Invoked when Result is successful or failed.
     public func destroy(completion: @escaping (Result<Void, UrlError>) -> Void) {
         unSchedule()
         completion(.success(()))
@@ -235,18 +235,6 @@ public extension String {
         default:
             throw UrlError.invalidParameter("Can't determine if video is vod or live: \(self)")
         }
-    }
-
-    func match(_ regex: String) -> [[String]] {
-        let nsString = self as NSString
-        return (try? NSRegularExpression(pattern: regex, options: []))?.matches(
-            in: self, options: [], range: NSMakeRange(0, nsString.length)
-        ).map { match in
-            (0 ..< match.numberOfRanges).map {
-                match.range(at: $0).location == NSNotFound
-                    ? "" : nsString.substring(with: match.range(at: $0))
-            }
-        } ?? []
     }
 }
 
