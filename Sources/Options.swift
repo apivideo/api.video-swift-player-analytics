@@ -18,13 +18,13 @@ public struct Options {
     ///   - onSessionIdReceived: Callback called once the session id has been received
     ///   - onPing: Callback called before sending the ping message
     public init(
-        mediaUrl: String,
+        mediaUrl: URL,
         metadata: [String: String] = [:],
         onSessionIdReceived: ((String) -> Void)? = nil,
         onPing: ((PlaybackPingMessage) -> Void)? = nil
     ) throws {
         self.init(
-            videoInfo: try VideoInfo.parseMediaUrl(mediaUrl: mediaUrl),
+            videoInfo: try VideoInfo.from(mediaUrl),
             metadata: metadata,
             onSessionIdReceived: onSessionIdReceived,
             onPing: onPing
@@ -32,6 +32,27 @@ public struct Options {
     }
 
     /// Object option initializer
+    /// - Parameters:
+    ///   - mediaUrl: Url of the media
+    ///   - metadata: object containing metadata
+    ///   - onSessionIdReceived: Callback called once the session id has been received
+    ///   - onPing: Callback called before sending the ping message
+    public init(
+        mediaUrl: String,
+        metadata: [String: String] = [:],
+        onSessionIdReceived: ((String) -> Void)? = nil,
+        onPing: ((PlaybackPingMessage) -> Void)? = nil
+    ) throws {
+        try self.init(
+            mediaUrl: URL(string: mediaUrl)!,
+            metadata: metadata,
+            onSessionIdReceived: onSessionIdReceived,
+            onPing: onPing
+        )
+    }
+
+    /// Object option initializer.
+    /// For custom collector domain, use this constructor.
     /// - Parameters:
     ///   - videoInfo: Object that contains all video informations
     ///   - metadata: Object containing metadata
