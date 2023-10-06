@@ -46,7 +46,9 @@ public class PlayerAnalytics {
         if timer == nil {
             schedule()
         }
-        addEvent(Event.PLAY)
+        messageBuilderQueue.sync {
+            self.addEvent(Event.PLAY)
+        }
         completion(.success(()))
     }
 
@@ -56,15 +58,20 @@ public class PlayerAnalytics {
         if timer == nil {
             schedule()
         }
-        addEvent(Event.RESUME)
+        messageBuilderQueue.sync {
+            addEvent(Event.RESUME)
+        }
         completion(.success(()))
     }
 
     /// Method to call once the player is ready to play the media.
     /// - Parameter completion: Invoked when Result is successful or failed.
     public func ready(completion: @escaping (Result<Void, Error>) -> Void) {
-        addEvent(Event.READY)
-        self.sendPing(payload: self.buildPingPayload()) { res in
+        let payload = messageBuilderQueue.sync {
+            addEvent(Event.READY)
+            return self.buildPingPayload()
+        }
+        self.sendPing(payload: payload) { res in
             completion(res)
         }
     }
@@ -73,8 +80,11 @@ public class PlayerAnalytics {
     /// - Parameter completion: Invoked when Result is successful or failed.
     public func end(completion: @escaping (Result<Void, Error>) -> Void) {
         unSchedule()
-        addEvent(Event.END)
-        self.sendPing(payload: self.buildPingPayload()) { res in
+        let payload = messageBuilderQueue.sync {
+            addEvent(Event.END)
+            return self.buildPingPayload()
+        }
+        self.sendPing(payload: payload) { res in
             completion(res)
         }
     }
@@ -83,8 +93,12 @@ public class PlayerAnalytics {
     /// - Parameter completion: Invoked when Result is successful or failed.
     public func pause(completion: @escaping (Result<Void, Error>) -> Void) {
         unSchedule()
+        let payload = messageBuilderQueue.sync {
+            addEvent(Event.PAUSE)
+            return self.buildPingPayload()
+        }
         addEvent(Event.PAUSE)
-        self.sendPing(payload: self.buildPingPayload()) { res in
+        self.sendPing(payload: payload) { res in
             completion(res)
         }
     }
@@ -103,9 +117,11 @@ public class PlayerAnalytics {
         } else {
             event = .SEEK_BACKWARD
         }
-        addEvent(
-            PingEvent(type: event, at: nil, from: from, to: to)
-        )
+        messageBuilderQueue.sync {
+            addEvent(
+                PingEvent(type: event, at: nil, from: from, to: to)
+            )
+        }
         completion(.success(()))
     }
 
@@ -157,25 +173,23 @@ public class PlayerAnalytics {
     private func buildPingPayload() -> PlaybackPingMessage {
         defer { self.cleanEventsStack() } // Clean events to avoid having stuck events.
 
-        return messageBuilderQueue.sync {
-            var session: Session
-            switch options.videoInfo.videoType {
-            case .LIVE:
-                session = Session.buildLiveStreamSession(
-                    sessionId: sessionId, loadedAt: loadedAt, livestreamId: options.videoInfo.videoId,
-                    referrer: "", metadata: options.metadata
-                )
-            case .VOD:
-                session = Session.buildVideoSession(
-                    sessionId: sessionId, loadedAt: loadedAt, videoId: options.videoInfo.videoId, referrer: "",
-                    metadata: options.metadata
-                )
-            }
-
-            return PlaybackPingMessage(
-                emittedAt: Date().preciseLocalTime, session: session, events: eventsStack
+        var session: Session
+        switch options.videoInfo.videoType {
+        case .LIVE:
+            session = Session.buildLiveStreamSession(
+                sessionId: sessionId, loadedAt: loadedAt, livestreamId: options.videoInfo.videoId,
+                referrer: "", metadata: options.metadata
+            )
+        case .VOD:
+            session = Session.buildVideoSession(
+                sessionId: sessionId, loadedAt: loadedAt, videoId: options.videoInfo.videoId, referrer: "",
+                metadata: options.metadata
             )
         }
+
+        return PlaybackPingMessage(
+            emittedAt: Date().preciseLocalTime, session: session, events: eventsStack
+        )
     }
 
     private func sendPing(
