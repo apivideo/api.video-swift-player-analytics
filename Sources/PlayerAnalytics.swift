@@ -8,6 +8,7 @@ public class PlayerAnalytics {
     private var timer: Timer?
     private var eventsStack = [PingEvent]()
     private let loadedAt = Date().preciseLocalTime
+    private let messageBuilderQueue = DispatchQueue(label: "video.api.analytics.MessageBuilderQueue")
 
     public private(set) var sessionId: String? {
         didSet {
@@ -164,11 +165,6 @@ public class PlayerAnalytics {
     @objc
     private func timerAction() {
         sendPing(payload: buildPingPayload()) { result in
-            switch result {
-            case .success: break
-            case let .failure(error):
-                print(error)
-            }
         }
     }
 
@@ -178,44 +174,46 @@ public class PlayerAnalytics {
     }
 
     private func buildPingPayload() -> PlaybackPingMessage {
-        var session: Session
-        switch options.videoInfo.videoType {
-        case .LIVE:
-            session = Session.buildLiveStreamSession(
-                sessionId: sessionId, loadedAt: loadedAt, livestreamId: options.videoInfo.videoId,
-                referrer: "", metadata: options.metadata
-            )
-        case .VOD:
-            session = Session.buildVideoSession(
-                sessionId: sessionId, loadedAt: loadedAt, videoId: options.videoInfo.videoId, referrer: "",
-                metadata: options.metadata
+        defer { self.cleanEventsStack() } // Clean events to avoid having stuck events.
+
+        return messageBuilderQueue.sync {
+            var session: Session
+            switch options.videoInfo.videoType {
+            case .LIVE:
+                session = Session.buildLiveStreamSession(
+                    sessionId: sessionId, loadedAt: loadedAt, livestreamId: options.videoInfo.videoId,
+                    referrer: "", metadata: options.metadata
+                )
+            case .VOD:
+                session = Session.buildVideoSession(
+                    sessionId: sessionId, loadedAt: loadedAt, videoId: options.videoInfo.videoId, referrer: "",
+                    metadata: options.metadata
+                )
+            }
+
+            return PlaybackPingMessage(
+                emittedAt: Date().preciseLocalTime, session: session, events: eventsStack
             )
         }
-
-        return PlaybackPingMessage(
-            emittedAt: Date().preciseLocalTime, session: session, events: eventsStack
-        )
     }
 
     private func sendPing(
         payload: PlaybackPingMessage, completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        if !eventsStack.isEmpty {
-            RequestsBuilder.sendPing(
-                taskExecutor: DefaultTasksExecutor.self,
-                url: options.videoInfo.pingUrl,
-                payload: payload
-            ) { res in
-                switch res {
-                case let .success(sessionId):
-                    if self.sessionId == nil {
-                        self.sessionId = sessionId
-                    }
-                    self.cleanEventsStack()
-                    completion(.success(()))
-                case let .failure(error):
-                    completion(.failure(error))
+        RequestsBuilder.sendPing(
+            taskExecutor: DefaultTasksExecutor.self,
+            url: options.videoInfo.pingUrl,
+            payload: payload
+        ) { res in
+            switch res {
+            case let .success(sessionId):
+                if self.sessionId == nil {
+                    self.sessionId = sessionId
                 }
+                completion(.success(()))
+            case let .failure(error):
+                print("Failed to send events: \(payload) due to \(error)")
+                completion(.failure(error))
             }
         }
     }
