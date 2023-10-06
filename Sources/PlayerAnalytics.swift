@@ -46,9 +46,8 @@ public class PlayerAnalytics {
         if timer == nil {
             schedule()
         }
-        addEventAt(Event.PLAY) { result in
-            completion(result)
-        }
+        addEvent(Event.PLAY)
+        completion(.success(()))
     }
 
     /// Method to call when the video playback is resumed after a pause.
@@ -57,23 +56,16 @@ public class PlayerAnalytics {
         if timer == nil {
             schedule()
         }
-        addEventAt(Event.RESUME) { result in
-            completion(result)
-        }
+        addEvent(Event.RESUME)
+        completion(.success(()))
     }
 
     /// Method to call once the player is ready to play the media.
     /// - Parameter completion: Invoked when Result is successful or failed.
     public func ready(completion: @escaping (Result<Void, Error>) -> Void) {
-        addEventAt(Event.READY) { result in
-            switch result {
-            case .success:
-                self.sendPing(payload: self.buildPingPayload()) { res in
-                    completion(res)
-                }
-            case .failure:
-                completion(result)
-            }
+        addEvent(Event.READY)
+        self.sendPing(payload: self.buildPingPayload()) { res in
+            completion(res)
         }
     }
 
@@ -81,15 +73,9 @@ public class PlayerAnalytics {
     /// - Parameter completion: Invoked when Result is successful or failed.
     public func end(completion: @escaping (Result<Void, Error>) -> Void) {
         unSchedule()
-        addEventAt(Event.END) { result in
-            switch result {
-            case .success:
-                self.sendPing(payload: self.buildPingPayload()) { res in
-                    completion(res)
-                }
-            case .failure:
-                completion(result)
-            }
+        addEvent(Event.END)
+        self.sendPing(payload: self.buildPingPayload()) { res in
+            completion(res)
         }
     }
 
@@ -97,15 +83,9 @@ public class PlayerAnalytics {
     /// - Parameter completion: Invoked when Result is successful or failed.
     public func pause(completion: @escaping (Result<Void, Error>) -> Void) {
         unSchedule()
-        addEventAt(Event.PAUSE) { result in
-            switch result {
-            case .success:
-                self.sendPing(payload: self.buildPingPayload()) { res in
-                    completion(res)
-                }
-            case .failure:
-                completion(result)
-            }
+        addEvent(Event.PAUSE)
+        self.sendPing(payload: self.buildPingPayload()) { res in
+            completion(res)
         }
     }
 
@@ -115,18 +95,18 @@ public class PlayerAnalytics {
     ///   - to: End time in second.
     ///   - completion: Invoked when Result is successful or failed.
     public func seek(from: Float, to: Float, completion: @escaping (Result<Void, Error>) -> Void) {
-        if from > 0, to > 0 {
-            var event: Event
-            if from < to {
-                event = .SEEK_FORWARD
-            } else {
-                event = .SEEK_BACKWARD
-            }
-            eventsStack.append(
-                PingEvent(emittedAt: Date().preciseLocalTime, type: event, at: nil, from: from, to: to)
-            )
-            completion(.success(()))
+        precondition(from >= 0, "from must be positive value but from=\(from)")
+        precondition(to >= 0, "to must be positive value but to=\(to)")
+        var event: Event
+        if from < to {
+            event = .SEEK_FORWARD
+        } else {
+            event = .SEEK_BACKWARD
         }
+        addEvent(
+            PingEvent(type: event, at: nil, from: from, to: to)
+        )
+        completion(.success(()))
     }
 
     /// Method to call when a seek event occurs.
@@ -140,16 +120,17 @@ public class PlayerAnalytics {
 
     /// Method to call when the video player is disposed.
     /// - Parameter completion: Invoked when Result is successful or failed.
-    public func destroy(completion: @escaping (Result<Void, UrlError>) -> Void) {
+    public func destroy(completion: @escaping (Result<Void, Error>) -> Void) {
         unSchedule()
         completion(.success(()))
     }
 
-    private func addEventAt(_ eventName: Event, completion: @escaping (Result<Void, Error>) -> Void) {
-        eventsStack.append(
-            PingEvent(emittedAt: loadedAt, type: eventName, at: currentTime, from: nil, to: nil)
-        )
-        completion(.success(()))
+    private func addEvent(_ eventName: Event) {
+        addEvent(PingEvent(type: eventName, at: currentTime, from: nil, to: nil))
+    }
+
+    private func addEvent(_ event: PingEvent) {
+        eventsStack.append(event)
     }
 
     private func schedule() {
@@ -164,7 +145,7 @@ public class PlayerAnalytics {
 
     @objc
     private func timerAction() {
-        sendPing(payload: buildPingPayload()) { result in
+        sendPing(payload: buildPingPayload()) { _ in
         }
     }
 
@@ -231,7 +212,7 @@ public extension String {
         case "live":
             return VideoType.LIVE
         default:
-            throw UrlError.invalidParameter("Can't determine if video is vod or live: \(self)")
+            throw AnalyticsError.invalidParameter("Can't determine if video is vod or live: \(self)")
         }
     }
 }

@@ -7,7 +7,7 @@ class MockedTasksExecutor: TasksExecutorProtocol {
         case invalidData(String)
         case testError(String)
     }
-    
+
     static func execute(
         session _: URLSession, request _: URLRequest, completion: @escaping (Result<Data, Error>) -> Void
     ) {

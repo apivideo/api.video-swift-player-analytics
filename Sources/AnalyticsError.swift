@@ -1,6 +1,6 @@
 import Foundation
 
-public enum UrlError: Error {
+public enum AnalyticsError: Error {
     case malformedUrl(String)
     case invalidParameter(String)
     case urlResponseError(String)

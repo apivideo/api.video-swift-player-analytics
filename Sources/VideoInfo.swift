@@ -19,7 +19,7 @@ public struct VideoInfo {
         self.videoType = videoType
 
         guard let pingUrl = URL(string: "\(collectorDomainURL)/\(videoType.rawValue)") else {
-            throw UrlError.malformedUrl("Can not create media url")
+            throw AnalyticsError.malformedUrl("Can not create media url")
         }
         self.pingUrl = pingUrl
     }
@@ -54,13 +54,13 @@ public struct VideoInfo {
             in: mediaUrlStr,
             range: NSRange(location: 0, length: mediaUrlStr.utf16.count)
         ) else {
-            throw UrlError.malformedUrl("Can not parse media url")
+            throw AnalyticsError.malformedUrl("Can not parse media url")
         }
 
         if let videoIdRange = Range(match.range(withName: "id"), in: mediaUrlStr) {
             videoId = String(mediaUrlStr[videoIdRange])
         } else {
-            throw UrlError.malformedUrl("Can not get video id from URL")
+            throw AnalyticsError.malformedUrl("Can not get video id from URL")
         }
 
         if let videoTypeRange = Range(match.range(withName: "type"), in: mediaUrlStr) {
@@ -69,7 +69,7 @@ public struct VideoInfo {
             if videoId.starts(with: "li") {
                 videoType = VideoType.LIVE
             } else {
-                throw UrlError.malformedUrl("Can not get video type from URL")
+                throw AnalyticsError.malformedUrl("Can not get video type from URL")
             }
         }
 
