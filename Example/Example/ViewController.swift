@@ -233,7 +233,7 @@ class ViewController: UIViewController {
                 let seekTime = CMTime(value: CMTimeValue(value), timescale: 1)
 
                 player.seek(to: seekTime)
-                playerAnalytics?.seek(from: fromCMTime, to: seekTime) { result in
+                playerAnalytics?.seek(from: max(fromCMTime, CMTime.zero), to: max(seekTime, CMTime.zero)) { result in
                     switch result {
                     case .success:
                         print("success seek")
