@@ -1,6 +1,11 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [1.1.1] - 2023-10-09
+- Fix minor issues: seek to 0 is possible, fix value of `emittedAt`,...
+- Synchronize generation of ping payload
+- Add api.video logo as AppIcon
+
 ## [1.1.0] - 2023-03-04
 - Add support for custom domain
 - `metadata` parameter is now a `Dictionary`
