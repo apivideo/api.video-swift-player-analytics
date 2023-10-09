@@ -105,8 +105,8 @@ public class PlayerAnalytics {
 
     /// Method to call when a seek event occurs.
     /// - Parameters:
-    ///   - from: Start time in second.
-    ///   - to: End time in second.
+    ///   - from: Start time in second. It must be >= 0.
+    ///   - to: End time in second. It must be >= 0.
     ///   - completion: Invoked when Result is successful or failed.
     public func seek(from: Float, to: Float, completion: @escaping (Result<Void, Error>) -> Void) {
         precondition(from >= 0, "from must be positive value but from=\(from)")
@@ -127,8 +127,8 @@ public class PlayerAnalytics {
 
     /// Method to call when a seek event occurs.
     /// - Parameters:
-    ///   - from: Start time in second.
-    ///   - to: End time in second.
+    ///   - from: Start time in CMTime. It must be >= 0.
+    ///   - to: End time in CMTime. It must be >= 0.
     ///   - completion: Invoked when Result is successful or failed.
     public func seek(from: CMTime, to: CMTime, completion: @escaping (Result<Void, Error>) -> Void) {
         seek(from: Float(from.seconds), to: Float(to.seconds), completion: completion)

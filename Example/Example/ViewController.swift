@@ -18,17 +18,42 @@ class ViewController: UIViewController {
     private var playerItemContext = 0
     var timeObserver: Any?
     var playerAnalytics: PlayerAnalytics?
-    var option: Options?
+    var options: Options?
     var isFistPlayed = true
-    let videoLink = "https://vod.api.video/vod/YOUR_VIDEO_ID/hls/manifest.m3u8"
-    let liveLink = "https://live.api.video/YOUR_LIVE_ID.m3u8"
-    var videoUrl: URL!
+    let vodUrl = "https://vod.api.video/vod/YOUR_VIDEO_ID/hls/manifest.m3u8"
+    let liveUrl = "https://live.api.video/YOUR_LIVE_ID.m3u8"
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        guard let url = URL(string: videoLink) else {
+        
+        /// Set URL to vodUrl or liveUrl here
+        let videoUrl = vodUrl // liveUrl
+        
+        guard let url = URL(string: videoUrl) else {
+            print("Url \(videoUrl) is not parsable")
             return
         }
+
+        do {
+            options = try Options(
+                mediaUrl: videoUrl,
+                metadata: ["string 1": "String 2", "string 3": "String 4"],
+                onSessionIdReceived: { id in
+                    print("sessionid : \(id)")
+                }
+            )
+        } catch {
+            fatalError("Url \(videoUrl) is not valid")
+        }
+        
+        guard let options = options else {
+            print("Analytics options is not valid")
+            return
+        }
+        
+        playerAnalytics = PlayerAnalytics(options: options)
+
+        // Player
         playerItem = AVPlayerItem(url: url)
         playerItem.addObserver(
             self,
@@ -40,24 +65,7 @@ class ViewController: UIViewController {
             self, selector: #selector(playerDidFinishPlaying),
             name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.currentItem
         )
-
-        do {
-            option = try Options(
-                mediaUrl: videoLink,
-                metadata: ["string 1": "String 2", "string 3": "String 4"],
-                onSessionIdReceived: { id in
-                    print("sessionid : \(id)")
-                }
-            )
-        } catch {
-            print("error with the url")
-        }
-
-        playerAnalytics = PlayerAnalytics(options: option!)
-
-        // Player
-        // progressSlider.isContinuous = false
-
+        
         videoPlayerView.backgroundColor = UIColor.black
         videoPlayerView.translatesAutoresizingMaskIntoConstraints = false
         let topConstraint = NSLayoutConstraint(
@@ -223,7 +231,7 @@ class ViewController: UIViewController {
                 // handle drag ended
                 let value = Float64(progressSlider.value) * CMTimeGetSeconds(duration)
                 let seekTime = CMTime(value: CMTimeValue(value), timescale: 1)
-                let currentTime = fromCMTime.seconds
+
                 player.seek(to: seekTime)
                 playerAnalytics?.seek(from: fromCMTime, to: seekTime) { result in
                     switch result {
@@ -246,7 +254,7 @@ class ViewController: UIViewController {
         let currentTimeInSecondsPlus15 = CMTimeGetSeconds(currentTime).advanced(by: 15)
         let seekTime = CMTime(value: CMTimeValue(currentTimeInSecondsPlus15), timescale: 1)
         player?.seek(to: seekTime)
-        playerAnalytics?.seek(from: Float(CMTimeGetSeconds(currentTime)), to: Float(seekTime.seconds)) { result in
+        playerAnalytics?.seek(from: max(currentTime, CMTime.zero), to: max(seekTime, CMTime.zero)) { result in
             switch result {
             case .success:
                 print("success seek")
@@ -262,7 +270,7 @@ class ViewController: UIViewController {
         let currentTimeInSecondsMinus15 = CMTimeGetSeconds(currentTime).advanced(by: -15)
         let seekTime = CMTime(value: CMTimeValue(currentTimeInSecondsMinus15), timescale: 1)
         player?.seek(to: seekTime)
-        playerAnalytics?.seek(from: Float(CMTimeGetSeconds(currentTime)), to: Float(seekTime.seconds)) { result in
+        playerAnalytics?.seek(from: max(currentTime, CMTime.zero), to: max(seekTime, CMTime.zero)) { result in
             switch result {
             case .success:
                 print("success seek")
