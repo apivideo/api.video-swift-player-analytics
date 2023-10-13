@@ -3,10 +3,10 @@ Pod::Spec.new do |s|
   s.version          = '1.1.1'
   s.summary          = 'The official Swift player analytics for api.video'
 
-  s.homepage         = 'https://github.com/apivideo/api.video-ios-player-analytics'
+  s.homepage         = 'https://github.com/apivideo/api.video-swift-player-analytics'
   s.license          = { :type => 'MIT', :file => 'LICENSE.md' }
   s.author           = { 'Ecosystem' => 'ecosystem@api.video' }
-  s.source           = { :git => 'https://github.com/apivideo/api.video-ios-player-analytics.git', :tag => "v" + s.version.to_s }
+  s.source           = { :git => 'https://github.com/apivideo/api.video-swift-player-analytics.git', :tag => "v" + s.version.to_s }
 
   s.ios.deployment_target = '11.0'
   s.swift_version = '5.0'

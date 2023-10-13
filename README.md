@@ -1,7 +1,6 @@
-# api.video-ios-player-analytics
-[![badge](https://img.shields.io/twitter/follow/api_video?style=social)](https://twitter.com/intent/follow?screen_name=api_video) &nbsp; [![badge](https://img.shields.io/github/stars/apivideo/api.video-ios-player-analytics?style=social)](https://github.com/apivideo/api.video-ios-player-analytics) &nbsp; [![badge](https://img.shields.io/discourse/topics?server=https%3A%2F%2Fcommunity.api.video)](https://community.api.video)
+[![badge](https://img.shields.io/twitter/follow/api_video?style=social)](https://twitter.com/intent/follow?screen_name=api_video) &nbsp; [![badge](https://img.shields.io/github/stars/apivideo/api.video-swift-player-analytics?style=social)](https://github.com/apivideo/api.video-swift-player-analytics) &nbsp; [![badge](https://img.shields.io/discourse/topics?server=https%3A%2F%2Fcommunity.api.video)](https://community.api.video)
 ![](https://github.com/apivideo/.github/blob/main/assets/apivideo_banner.png)
-<h1 align="center">api.video iOS player analytics module</h1>
+<h1 align="center">api.video Swift player analytics for iOS</h1>
 
 [api.video](https://api.video) is the video infrastructure for product builders. Lightning fast video APIs for integrating, scaling, and managing on-demand & low latency live streaming features in your app.
 
@@ -29,7 +28,7 @@
 
 
 # Project description
-iOS library to manually call the api.video analytics collector.
+Swift library that sends events to api.video analytics collector.
 
 This is useful if you are using a video player for which we do not yet provide a ready-to-use monitoring module.
 
@@ -39,12 +38,12 @@ This is useful if you are using a video player for which we do not yet provide a
 ### Swift Package Manager
 In the Project Navigator select your own project. Then select the project in the Project section and click on the Package Dependencies tab. Click on the "+" button at the bottom. Paste the below url on the search bar on the top right. Finaly click on "Add package" button.
 ```
- https://github.com/apivideo/api.video-ios-player-analytics
+ https://github.com/apivideo/api.video-swift-player-analytics
 ```
 Or add this in your Package.swift
 ```
   dependencies: [
-        .package(url: "https://github.com/apivideo/api.video-ios-player-analytics.git", from: "1.1.1"),
+        .package(url: "https://github.com/apivideo/api.video-swift-player-analytics.git", from: "1.1.1"),
     ],
 ```
 ### Cocoapods
@@ -54,7 +53,7 @@ Run `pod install`
 
 # Sample application
 
-A demo application demonstrates how to use player analytics library. See [`/Example`](https://github.com/apivideo/api.video-ios-player-analytics/tree/main/Example) folder.
+A demo application demonstrates how to use player analytics library. See [`/Example`](https://github.com/apivideo/api.video-swift-player-analytics/tree/main/Example) folder.
 
 # Documentation
 

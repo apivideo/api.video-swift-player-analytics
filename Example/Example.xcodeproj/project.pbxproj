@@ -17,7 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		C70E916027AAE59800573494 /* api.video-ios-player-analytics */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "api.video-ios-player-analytics"; path = ..; sourceTree = "<group>"; };
+		C70E916027AAE59800573494 /* api.video-swift-player-analytics */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "api.video-swift-player-analytics"; path = ..; sourceTree = "<group>"; };
 		C735A2C727AADF9F00145B8E /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C735A2CA27AADF9F00145B8E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C735A2CC27AADF9F00145B8E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -43,7 +43,7 @@
 		C70E915F27AAE59800573494 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				C70E916027AAE59800573494 /* api.video-ios-player-analytics */,
+				C70E916027AAE59800573494 /* api.video-swift-player-analytics */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -106,7 +106,7 @@
 			packageProductDependencies = (
 				C706D33F27C52F9F004A0506 /* ApiVideoPlayerAnalytics */,
 			);
-			productName = "api.video-ios-player-analytics-example";
+			productName = "api.video-swift-player-analytics-example";
 			productReference = C735A2C727AADF9F00145B8E /* Example.app */;
 			productType = "com.apple.product-type.application";
 		};

@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  api.video-ios-player-analytics-example
+//  api.video-swift-player-analytics-example
 //
 //
 
