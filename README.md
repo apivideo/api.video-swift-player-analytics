@@ -1,132 +1,101 @@
 <!--<documentation_excluded>-->
-[![badge](https://img.shields.io/twitter/follow/api_video?style=social)](https://twitter.com/intent/follow?screen_name=api_video) &nbsp; [![badge](https://img.shields.io/github/stars/apivideo/api.video-swift-player-analytics?style=social)](https://github.com/apivideo/api.video-swift-player-analytics) &nbsp; [![badge](https://img.shields.io/discourse/topics?server=https%3A%2F%2Fcommunity.api.video)](https://community.api.video)
+[![badge](https://img.shields.io/twitter/follow/api_video?style=social)](https://twitter.com/intent/follow?screen_name=api_video)
+&nbsp; [![badge](https://img.shields.io/github/stars/apivideo/api.video-swift-player-analytics?style=social)](https://github.com/apivideo/api.video-swift-player-analytics)
+&nbsp; [![badge](https://img.shields.io/discourse/topics?server=https%3A%2F%2Fcommunity.api.video)](https://community.api.video)
 ![](https://github.com/apivideo/.github/blob/main/assets/apivideo_banner.png)
-<h1 align="center">api.video Swift player analytics for iOS</h1>
+<h1 align="center">api.video Swift player analytics</h1>
 
-[api.video](https://api.video) is the video infrastructure for product builders. Lightning fast video APIs for integrating, scaling, and managing on-demand & low latency live streaming features in your app.
+[api.video](https://api.video) is the video infrastructure for product builders. Lightning fast
+video APIs for integrating, scaling, and managing on-demand & low latency live streaming features in
+your app.
 
 ## Table of contents
 
 - [Table of contents](#table-of-contents)
 - [Project description](#project-description)
 - [Getting started](#getting-started)
-  - [Installation](#installation)
-    - [Swift Package Manager](#swift-package-manager)
-    - [Cocoapods](#cocoapods)
-- [Sample application](#sample-application)
+    - [Installation](#installation)
+    - [Code sample](#code-sample)
 - [Documentation](#documentation)
-  - [Options](#options)
-  - [PlayerAnalytics API](#playeranalytics-api)
-      - [`play(completion: @escaping (Result<Void, Error>) -> Void)`](#playcompletion-escaping-resultvoid-error---void)
-      - [`resume(completion: @escaping (Result<Void, Error>) -> Void)`](#resumecompletion-escaping-resultvoid-error---void)
-      - [`ready(completion: @escaping (Result<Void, Error>) -> Void)`](#readycompletion-escaping-resultvoid-error---void)
-      - [`end(completion: @escaping (Result<Void, Error>) -> Void)`](#endcompletion-escaping-resultvoid-error---void)
-      - [`seek(from:Float, to: Float, completion : @escaping (Result<Void, Error>) -> Void)`](#seekfromfloat-to-float-completion--escaping-resultvoid-error---void)
-      - [`pause(completion: @escaping (Result<Void, Error>) -> Void)`](#pausecompletion-escaping-resultvoid-error---void)
-      - [`destroy(completion: @escaping (Result<Void, VideoError>) -> Void)`](#destroycompletion-escaping-resultvoid-videoerror---void)
-      - [`currentTime`](#currenttime)
-    
-
+- [FAQ](#faq)
 
 <!--</documentation_excluded>-->
 <!--<documentation_only>
 ---
-title: api.video Swift Player analytics plugin
-meta: 
-  description: The official api.video Swift Player analytics plugin for api.video. [api.video](https://api.video/) is the video infrastructure for product builders. Lightning fast video APIs for integrating, scaling, and managing on-demand & low latency live streaming features in your app.
+title: api.video Swift player analytics
+meta:
+  description: The official api.video Swift player analytics library for api.video. [api.video](https://api.video/) is the video infrastructure for product builders. Lightning fast video APIs for integrating, scaling, and managing on-demand & low latency live streaming features in your app.
 ---
 
-# api.video Swift Player analytics plugin
-
-[api.video](https://api.video/) is the video infrastructure for product builders. Lightning fast video APIs for integrating, scaling, and managing on-demand & low latency live streaming features in your app.
-
 </documentation_only>-->
-## Project description
-Swift library that sends events to api.video analytics collector.
 
-This is useful if you are using a video player for which we do not yet provide a ready-to-use monitoring module.
+## Project description
+
+This library send player events from the player to api.video.
 
 ## Getting started
 
 ### Installation
+
 #### Swift Package Manager
-In the Project Navigator select your own project. Then select the project in the Project section and click on the Package Dependencies tab. Click on the "+" button at the bottom. Paste the below url on the search bar on the top right. Finaly click on "Add package" button.
-```
- https://github.com/apivideo/api.video-swift-player-analytics
-```
-Or add this in your Package.swift
-```
+
+Add the following dependency to your `Package.swift` file:
+
+```swift
   dependencies: [
-        .package(url: "https://github.com/apivideo/api.video-swift-player-analytics.git", from: "1.1.1"),
+        .package(url: "https://github.com/apivideo/api.video-swift-player-analytics.git", from: "2.0.0"),
     ],
 ```
-#### Cocoapods
-Add `pod 'ApiVideoPlayerAnalytics', '1.1.1'` in your `Podfile`
 
-Run `pod install`
+#### CocoaPods
 
-## Sample application
+Add the following line to your `Podfile`:
 
-A demo application demonstrates how to use player analytics library. See [`/Example`](https://github.com/apivideo/api.video-swift-player-analytics/tree/main/Example) folder.
+```ruby
+pod 'ApiVideoPlayerAnalytics', '~> 2.0.0
+```
+
+Then, run `pod install`.
+
+### Code sample
+
+Create a `ApiVideoAnalyticsAVPlayer` instance.
+
+```swift
+import ApiVideoPlayerAnalytics
+
+let player = ApiVideoAnalyticsAVPlayer(url: "URL of the HLS manifest") // HLS manifest from api.video. Example: https://vod.api.video/vod/YOUR_VIDEO_ID/hls/manifest.m3u8
+```
+
+Then, use it like a regular `AVPlayer`.
+
+```swift
+player.play()
+```
+
+For a custom domain collector, use:
+
+```swift
+let player = ApiVideoAnalyticsAVPlayer(url: "URL of the HLS manifest", collectorUrl: "https://collector.mycustomdomain.com") // Register the player analytics listener so it sends player events to api.video.
+```
 
 ## Documentation
 
-### Options
+// TODO
 
-The analytics module constructor takes a `Options` parameter that contains the following options:
+## Sample application
 
-|         Option name | Mandatory | Type                                            | Description                                                                                                  |
-| ------------------: | --------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-|            mediaUrl | **yes**   | String                                          | url of the media (eg. `https://cdn.api.video/vod/vi5oDagRVJBSKHxSiPux5rYD/hls/manifest.m3u8`)                |
-|           videoInfo | **yes**   | VideoInfo                                       | information containing analytics collector url, video type (vod or live) and video id                        |
-|            metadata | no        | ```[[String:String]]```                       | object containing [metadata](https://api.video/blog/tutorials/dynamic-metadata/)                              |
-| onSessionIdReceived | no        | ```((String) -> ())?```            | callback called once the session id has been received                                                        |
-|              onPing | no        | ```((PlaybackPingMessage) -> ())?``` | callback called before sending the ping message                                                              |
+Open `ApiVideoPlayerAnalytics.xcodeproj`.
 
-Options instantiation is made with either mediaUrl or videoInfo.
+Replace the default media ID in `Examples/iOS/ViewController.swift` with your own.
 
-Once the module is instantiated, the following methods have to be called to monitor the playback events.
+```swift
+let url = Utils.inferManifestURL(mediaId: "vi77Dgk0F8eLwaFOtC5870yn") // replace `vi77Dgk0F8eLwaFOtC5870yn` with your own media ID
+```
 
-### PlayerAnalytics API
+Then, run the `Example iOS` target.
 
-**`play(completion: @escaping (Result<Void, Error>) -> Void)`**
+## FAQ
 
-method to call when the video starts playing for the first time (in the case of a resume after paused, use `resume()`)
-
-
-**`resume(completion: @escaping (Result<Void, Error>) -> Void)`**
-
-method to call when the video playback is resumed after a pause
-
-
-**`ready(completion: @escaping (Result<Void, Error>) -> Void)`**
-
-method to call once the player is ready to play the media
-
-
-**`end(completion: @escaping (Result<Void, Error>) -> Void)`**
-
-method to call when the video is ended
-
-
-**`seek(from:Float, to: Float, completion : @escaping (Result<Void, Error>) -> Void)`**
-
-method to call when a seek event occurs, the `from` and `to` parameters are mandatory and should contains the seek start & end times in seconds
-
-
-**`pause(completion: @escaping (Result<Void, Error>) -> Void)`**
-
-method to call when the video is paused
-
-
-**`destroy(completion: @escaping (Result<Void, VideoError>) -> Void)`**
-
-method to call when the video player is disposed (eg. when the use closes the navigation tab)
-
-
-**`currentTime`**
-
-field to call each time the playback time changes (it should be called often, the accuracy of the collected data depends on it)
-
-
-
+If you have any questions, ask us in the [community](https://community.api.video) or
+use [issues](https://github.com/apivideo/api.video-swift-player-analytics/issues).
