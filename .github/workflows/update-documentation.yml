@@ -13,11 +13,11 @@ jobs:
               with:
                 xcode-version: latest-stable
             - name: generate doc files
-              run: xcodebuild docbuild -scheme ApiVideoPlayer -derivedDataPath ../api.video-swift-player-build -destination 'platform=iOS Simulator,name=iPhone 12'
+              run: xcodebuild docbuild -scheme ApiVideoPlayerAnalytics -derivedDataPath ../api.video-swift-player-analytics-build -destination 'platform=iOS Simulator,name=iPhone 12'
             - name: create docs folder
               run: mkdir ../Docs
             - name: process docarchive
-              run: $(xcrun --find docc) process-archive \transform-for-static-hosting ../api.video-swift-player-build/Build/Products/Debug-iphonesimulator/ApiVideoPlayer.doccarchive \--output-path ../Docs \--hosting-base-path /api.video-swift-player
+              run: $(xcrun --find docc) process-archive \transform-for-static-hosting ../api.video-swift-player-analytics-build/Build/Products/Debug/ApiVideoPlayerAnalytics.doccarchive \--output-path ../Docs \--hosting-base-path /api.video-swift-player-analytics
             - name: Deploy documentation to Github Pages
               uses: JamesIves/github-pages-deploy-action@v4
               with:
