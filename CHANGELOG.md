@@ -1,6 +1,9 @@
 # Changelog
 All changes to this project will be documented in this file.
 
+## [2.0.0] - 2024-07-24
+- Use Analytics endpoint v2
+
 ## [1.1.1] - 2023-10-09
 - Fix minor issues: seek to 0 is possible, fix value of `emittedAt`,...
 - Synchronize generation of ping payload
