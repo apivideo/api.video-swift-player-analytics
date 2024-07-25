@@ -79,10 +79,6 @@ For a custom domain collector, use:
 let player = ApiVideoAnalyticsAVPlayer(url: "URL of the HLS manifest", collectorUrl: "https://collector.mycustomdomain.com") // Register the player analytics listener so it sends player events to api.video.
 ```
 
-## Documentation
-
-// TODO
-
 ## Sample application
 
 Open `ApiVideoPlayerAnalytics.xcodeproj`.
@@ -94,6 +90,12 @@ let url = Utils.inferManifestURL(mediaId: "vi77Dgk0F8eLwaFOtC5870yn") // replace
 ```
 
 Then, run the `Example iOS` target.
+
+
+## Documentation
+
+- [Player documentation](https://apivideo.github.io/api.video-swift-player-analytics/documentation/apivideoplayeranalytics/)
+- [api.video analytics documentation](https://docs.api.video/analytics)
 
 ## FAQ
 
